@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  role       ROLE
+  status     STATUS   @default(in_progress)
+  is_deleted Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  Profile Profile?
+  Tutor   Tutor?
+  Tution  Tution[]
+}
+
+model Profile {
+  id String @id @default(uuid())
+
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id])
+
+  name        String
+  email       String
+  gender      GENDER
+  dateOfBirth DateTime
+  contactNo   String
+
+  presentAddress   String
+  presentAddressId Address @relation(name: "PresentAddress", fields: [presentAddress], references: [id])
+
+  permanentAddress   String
+  permanentAddressId Address @relation(name: "permanentAddress", fields: [permanentAddress], references: [id])
+
+  profileImage String?
+  isDeleted    Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  Review Review[]
+}
+
+model Address {
+  id                String    @id @default(uuid())
+  village           String
+  postOffice        String
+  postalCode        String
+  policeStaion      String
+  upozila           String
+  district          String
+  presentProfiles   Profile[] @relation(name: "PresentAddress")
+  permanentProfiles Profile[] @relation(name: "permanentAddress")
+  Tution            Tution[]
+}
+
+model Tutor {
+  id String @id @default(uuid())
+
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id])
+
+  experties        String
+  yearOfExperience String
+  fee              String
+  details          String
+  location         String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  appliedTution      Tution[]             @relation(name: "applied_tutor")
+  selectedTution     Tution[]              @relation(name: "selected_tutor")
+  review             Review[]
+  tutorQualification TutorQualification[]
+  tutorSchedule      TutorSchedule[]
+}
+
+model Schedule {
+  id         String   @id @default(uuid())
+  days       String[]
+  StartDate  DateTime
+  endDate    DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  tutorSchedule TutorSchedule[]
+}
+
+model TutorSchedule {
+  tutor_id String
+  tuor     Tutor  @relation(fields: [tutor_id], references: [id])
+
+  schedule_id String
+  schedule    Schedule @relation(fields: [schedule_id], references: [id])
+
+  @@id([tutor_id, schedule_id])
+}
+
+model Qualification {
+  id                 String               @id @default(uuid())
+  degree             String
+  year               String
+  institution        String
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
+  TutorQualification TutorQualification[]
+}
+
+model TutorQualification {
+  tutor_id String
+  tutor    Tutor  @relation(fields: [tutor_id], references: [id])
+
+  qualification_id String
+  qualification    Qualification @relation(fields: [qualification_id], references: [id])
+
+  @@id([tutor_id, qualification_id])
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  student_id String
+  student    Profile? @relation(fields: [student_id], references: [id])
+
+  tutor_id String
+  tutor    Tutor? @relation(fields: [tutor_id], references: [id])
+
+  rating     String
+  comment    String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Tution {
+  id String @id @default(uuid())
+
+  student_id String
+  student    User   @relation(fields: [student_id], references: [id])
+
+  subject String
+  class   String
+  medium  MEDIUM
+
+  address   String
+  addressId Address @relation(fields: [address], references: [id])
+
+  contactNo String
+  salary    String
+  gender    String
+  status    TUTION_STATUS @default(available)
+
+  applied_tutors String
+  appliedTutor   Tutor? @relation(name: "applied_tutor", fields: [applied_tutors], references: [id])
+
+  selected_tutor String
+  selectedTutor  Tutor? @relation(name: "selected_tutor", fields: [selected_tutor], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+//enums
+
+enum ROLE {
+  super_admin
+  admin
+  tutor
+  student
+}
+
+enum STATUS {
+  in_progress
+  blocked
+}
+
+enum GENDER {
+  male
+  female
+}
+
+enum MEDIUM {
+  bangla
+  english
+}
+
+enum TUTION_STATUS {
+  available
+  booked
+}
