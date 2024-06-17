@@ -11,7 +11,7 @@ export type TAddress = {
     policeStation: string;
     postOfficeName: string;
     postalCode: number;
-    subDistrict: string;
+    upozila: string;
     district: string;
     country: string;
 }
