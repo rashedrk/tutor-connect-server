@@ -1,6 +1,7 @@
 import { User } from "@prisma/client"
 import prisma from "../../utils/prisma"
-
+import bcrypt from "bcrypt"
+import config from "../../config/config";
 
 
 
@@ -38,8 +39,24 @@ const createUser = async (payload: User) => {
     //     return newProfile
     // });
 
+
+    //hashing password using bcrypt 
+    const hashedPassword = bcrypt.hashSync(payload.password, Number(config.salt_rounds as string));
+
     const result = await prisma.user.create({
-        data: payload
+        data: {
+            ...payload,
+            password: hashedPassword //storing the hashed password
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            is_deleted: true,
+            status: true,
+            created_at: true,
+            updated_at: true
+        },
     });
 
     return result
