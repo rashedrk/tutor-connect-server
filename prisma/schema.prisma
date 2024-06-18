@@ -34,11 +34,11 @@ model Profile {
   dateOfBirth DateTime
   contactNo   String
 
-  presentAddress   String
-  presentAddressId Address @relation(name: "PresentAddress", fields: [presentAddress], references: [id])
+  presentAddressId   String
+  presentAddress Address @relation(name: "PresentAddress", fields: [presentAddressId], references: [id])
 
-  permanentAddress   String
-  permanentAddressId Address @relation(name: "permanentAddress", fields: [permanentAddress], references: [id])
+  permanentAddressId   String
+  permanentAddress Address @relation(name: "permanentAddress", fields: [permanentAddressId], references: [id])
 
   profileImage String?
   isDeleted    Boolean  @default(false)
