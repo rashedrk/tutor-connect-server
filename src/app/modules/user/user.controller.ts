@@ -23,7 +23,7 @@ const getMyProfile = catchAsync(async (req: Request & { user?: TAuthUser }, res)
 
     sendResponse(res, {
         success: true,
-        statusCode: httpStatus.CREATED,
+        statusCode: httpStatus.OK,
         message: 'User profile retrieved successfully!',
         data: result
     })

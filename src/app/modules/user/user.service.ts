@@ -66,21 +66,25 @@ const getMyProfile = async (userId: string) => {
     const user = await prisma.user.findUniqueOrThrow({
         where: {
             id: userId
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            created_at: true,
+            updated_at: true,
+            Profile: {
+                include: {
+                    presentAddressId: true,
+                    permanentAddressId: true,
+                }
+            }
         }
     });
 
-    const {id, email, role} = user;
-
-    const userProfile = await prisma.profile.findUniqueOrThrow({
-        where: {
-            user_id: id
-        }
-    });
-
-    console.log(userProfile);
-    
-
+    return user
 }
+
 
 
 export const userServices = {
