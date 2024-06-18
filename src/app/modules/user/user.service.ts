@@ -73,10 +73,10 @@ const getMyProfile = async (userId: string) => {
             role: true,
             created_at: true,
             updated_at: true,
-            Profile: {
+            profile: {
                 include: {
-                    presentAddressId: true,
-                    permanentAddressId: true,
+                    presentAddress: true,
+                    permanentAddress: true,
                 }
             }
         }

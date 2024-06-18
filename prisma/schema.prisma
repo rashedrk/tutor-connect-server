@@ -17,9 +17,9 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  Profile Profile?
-  Tutor   Tutor?
-  Tution  Tution[]
+  profile Profile?
+  tutor   Tutor?
+  tution  Tution[]
 }
 
 model Profile {
@@ -34,18 +34,18 @@ model Profile {
   dateOfBirth DateTime
   contactNo   String
 
-  presentAddressId   String
-  presentAddress Address @relation(name: "PresentAddress", fields: [presentAddressId], references: [id])
+  presentAddressId String
+  presentAddress   Address @relation(name: "PresentAddress", fields: [presentAddressId], references: [id])
 
-  permanentAddressId   String
-  permanentAddress Address @relation(name: "permanentAddress", fields: [permanentAddressId], references: [id])
+  permanentAddressId String
+  permanentAddress   Address @relation(name: "permanentAddress", fields: [permanentAddressId], references: [id])
 
   profileImage String?
   isDeleted    Boolean  @default(false)
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  Review Review[]
+  review Review[]
 }
 
 model Address {
@@ -58,7 +58,7 @@ model Address {
   district          String
   presentProfiles   Profile[] @relation(name: "PresentAddress")
   permanentProfiles Profile[] @relation(name: "permanentAddress")
-  Tution            Tution[]
+  tution            Tution[]
 }
 
 model Tutor {
@@ -76,7 +76,7 @@ model Tutor {
   updated_at       DateTime @updatedAt
 
   appliedTution      Tution[]             @relation(name: "applied_tutor")
-  selectedTution     Tution[]              @relation(name: "selected_tutor")
+  selectedTution     Tution[]             @relation(name: "selected_tutor")
   review             Review[]
   tutorQualification TutorQualification[]
   tutorSchedule      TutorSchedule[]
@@ -110,7 +110,7 @@ model Qualification {
   institution        String
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
-  TutorQualification TutorQualification[]
+  tutorQualification TutorQualification[]
 }
 
 model TutorQualification {
