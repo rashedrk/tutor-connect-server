@@ -62,7 +62,28 @@ const createUser = async (payload: User) => {
     return result
 }
 
+const getMyProfile = async (userId: string) => {
+    const user = await prisma.user.findUniqueOrThrow({
+        where: {
+            id: userId
+        }
+    });
+
+    const {id, email, role} = user;
+
+    const userProfile = await prisma.profile.findUniqueOrThrow({
+        where: {
+            user_id: id
+        }
+    });
+
+    console.log(userProfile);
+    
+
+}
+
 
 export const userServices = {
-    createUser
+    createUser,
+    getMyProfile
 }

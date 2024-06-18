@@ -1,4 +1,4 @@
-import { Address, GENDER, Profile, User } from "@prisma/client";
+import { Address, GENDER, User } from "@prisma/client";
 
 export type TUser = {
   user_id: string;
