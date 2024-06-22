@@ -5,13 +5,24 @@ import { userServices } from "./user.service";
 import httpStatus from 'http-status';
 import { TAuthUser } from "../../types/global";
 
-const createUser = catchAsync(async (req, res) => {
-    const result = await userServices.createUser(req.body);
+const createTutor = catchAsync(async (req, res) => {
+    const result = await userServices.createTutor(req.body);
 
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.CREATED,
-        message: 'User created successfully!',
+        message: 'Tutor created successfully!',
+        data: result
+    })
+});
+
+const createStudent = catchAsync(async (req, res) => {
+    const result = await userServices.createStudent(req.body);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: 'Student created successfully!',
         data: result
     })
 });
@@ -30,6 +41,7 @@ const getMyProfile = catchAsync(async (req: Request & { user?: TAuthUser }, res)
 });
 
 export const userController = {
-    createUser,
+    createStudent,
+    createTutor,
     getMyProfile
 }

@@ -67,7 +67,7 @@ model Tutor {
   user_id String @unique
   user    User   @relation(fields: [user_id], references: [id])
 
-  experties        String
+  experties        String[]
   yearOfExperience String
   fee              String
   details          String

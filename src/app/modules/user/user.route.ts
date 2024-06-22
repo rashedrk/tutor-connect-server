@@ -5,7 +5,8 @@ import { ROLE } from "@prisma/client";
 
 const router = Router();
 
-router.post('/create', userController.createUser);
+router.post('/tutor/create', userController.createTutor);
+router.post('/student/create', userController.createStudent);
 router.get('/profile', auth(ROLE.admin, ROLE.super_admin, ROLE.student, ROLE.tutor), userController.getMyProfile)
 
 export const userRoutes = router
