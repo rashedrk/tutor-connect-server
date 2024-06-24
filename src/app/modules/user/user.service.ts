@@ -2,10 +2,10 @@ import { ROLE, User } from "@prisma/client"
 import prisma from "../../utils/prisma"
 import bcrypt from "bcrypt"
 import config from "../../config/config";
-import { TTutor } from "./user.interface";
+import { TTutor, TUser } from "./user.interface";
 
 
-const createStudent = async (payload: TTutor) => {
+const createStudent = async (payload: TUser) => {
     const result = await prisma.$transaction(async (trxClient) => {
         //hashing password using bcrypt 
         const hashedPassword = bcrypt.hashSync(payload.password, Number(config.salt_rounds as string));
@@ -13,7 +13,7 @@ const createStudent = async (payload: TTutor) => {
             data: {
                 email: payload.email,
                 password: hashedPassword,
-                role: ROLE.tutor,
+                role: ROLE.student,
             }
         })
 
@@ -24,7 +24,7 @@ const createStudent = async (payload: TTutor) => {
             data: payload.permanentAddress
         });
 
-        const newProfile = await trxClient.profile.create({
+        await trxClient.profile.create({
             data: {
                 user_id: user.id,
                 name: payload.name,
@@ -37,7 +37,28 @@ const createStudent = async (payload: TTutor) => {
                 profileImage: payload.profileImage,
             }
         });
-        return { newProfile }
+
+        //find the user information that is created and send it 
+        const student = await trxClient.user.findUnique({
+            where: {
+                id: user.id
+            },
+            select: {
+                id: true,
+                email: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+                profile: {
+                    include: {
+                        presentAddress: true,
+                        permanentAddress: true,
+                    }
+                }
+            }
+        })
+
+        return student
     });
 
     return result
@@ -101,7 +122,31 @@ const createTutor = async (payload: TTutor) => {
             }
         })
 
-        return { newProfile, newTutor }
+        //find the user information that is created and send it 
+        const tutor = await trxClient.user.findUnique({
+            where: {
+                id: user.id
+            },
+            select: {
+                id: true,
+                email: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+                profile: {
+                    include: {
+                        presentAddress: true,
+                        permanentAddress: true,
+                    }
+                },
+                
+            }
+        });
+
+        return {
+            ...tutor,
+            qualification: qualification
+        }
     });
 
     return result
