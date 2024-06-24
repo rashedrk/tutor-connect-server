@@ -42,7 +42,7 @@ const applyTuition = async (userId: string, tuitionId: string) => {
     });
 
     // console.log("tutor",tutor);
-    
+
 
     if (!tutor) {
         throw new AppError(httpStatus.NOT_FOUND, "tutor not found")
@@ -62,10 +62,35 @@ const applyTuition = async (userId: string, tuitionId: string) => {
     })
 
     return result;
+};
+
+const getMyAppliedTuition = async (userId: string) => {
+    //TODO: add pagination , search and filtering
+    const tutor = await prisma.tutor.findUnique({
+        where: {
+            user_id: userId
+        }
+    });
+
+    if (!tutor) {
+        throw new AppError(httpStatus.NOT_FOUND, "tutor not found")
+    }
+
+    const result = await prisma.appliedTuition.findMany({
+        where: {
+            tutor_id: tutor.id
+        },
+        include: {
+            tuition: true
+        }
+    });
+
+    return result;
 }
 
 export const tuitionServices = {
     createTuition,
     getAllTuitions,
-    applyTuition
+    applyTuition,
+    getMyAppliedTuition
 }

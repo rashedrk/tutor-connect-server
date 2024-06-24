@@ -41,8 +41,24 @@ const applyTuition = catchAsync(async (req: Request & { user?: TAuthUser }, res)
     })
 });
 
+const getMyAppliedTuition = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
+    const userId = req?.user?.id as string;
+
+    const result = await tuitionServices.getMyAppliedTuition(userId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "All applied tuitions retrieved successfully",
+        data: result
+    })
+});
+
+
+
 export const tuitionControllers = {
     createTuition,
     getAllTuitions,
-    applyTuition
+    applyTuition,
+    getMyAppliedTuition
 }

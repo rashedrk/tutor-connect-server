@@ -7,6 +7,6 @@ const router = Router();
 
 router.post('/create', tuitionControllers.createTuition);
 router.get('/', tuitionControllers.getAllTuitions);
-router.post('/apply/:tuitionId', auth(ROLE.tutor), tuitionControllers.applyTuition)
-
+router.post('/apply/:tuitionId', auth(ROLE.tutor), tuitionControllers.applyTuition);
+router.get('/applied', auth(ROLE.tutor), tuitionControllers.getMyAppliedTuition)
 export const tuitionRoutes = router
