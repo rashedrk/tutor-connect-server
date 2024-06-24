@@ -11,8 +11,20 @@ const createTuition = catchAsync(async (req, res) => {
         message: "Tuition created successfully",
         data: result
     })
-})
+});
+
+const getAllTuitions = catchAsync(async (req, res) => {
+    const result = await tuitionServices.getAllTuitions();
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "All Tuitions retrieved successfully",
+        data: result
+    })
+});
 
 export const tuitionControllers = {
-    createTuition
+    createTuition,
+    getAllTuitions
 }

@@ -25,6 +25,13 @@ const createTuition = (payload: any) => {
     return result;
 };
 
+const getAllTuitions = () => {
+    const result = prisma.tuition.findMany({});
+
+    return result;
+} 
+
 export const tuitionServices = {
-    createTuition
+    createTuition,
+    getAllTuitions
 }

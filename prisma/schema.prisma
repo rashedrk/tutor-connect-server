@@ -65,7 +65,7 @@ model Tutor {
   id String @id @default(uuid())
 
   user_id String  @unique
-  profile    Profile @relation(fields: [user_id], references: [user_id])
+  profile Profile @relation(fields: [user_id], references: [user_id])
 
   experties        String[]
   yearOfExperience String
@@ -107,7 +107,7 @@ model Qualification {
   id                 String               @id @default(uuid())
   degree             String
   year               String
-  instiTuition       String
+  institution        String
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
   tutorQualification TutorQualification[]
