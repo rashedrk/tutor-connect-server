@@ -1,6 +1,6 @@
 import prisma from "../../utils/prisma";
 
-const createTuition = (payload) => {
+const createTuition = (payload: any) => {
 
     const result = prisma.$transaction(async (trxClient) => {
         const address = await trxClient.address.create({
@@ -13,12 +13,6 @@ const createTuition = (payload) => {
             data: {
                 ...payload,
                 address_id: address.id,
-                // student: {
-                //     connect: { id: payload.student_id }
-                // },
-                // address: {
-                //     connect: {id: address.id}
-                // }
             }
         })
 
