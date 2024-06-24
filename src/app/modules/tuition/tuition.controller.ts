@@ -26,6 +26,19 @@ const getAllTuitions = catchAsync(async (req, res) => {
     })
 });
 
+const getATuitionById = catchAsync(async (req, res) => {
+    const tuitionId = req.params.tuitionId;
+
+    const result = await tuitionServices.getATuitionById(tuitionId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Tuition retrieved successfully",
+        data: result
+    })
+});
+
 
 const applyTuition = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
     const tuitionId = req.params.tuitionId;
@@ -60,5 +73,6 @@ export const tuitionControllers = {
     createTuition,
     getAllTuitions,
     applyTuition,
-    getMyAppliedTuition
+    getMyAppliedTuition,
+    getATuitionById
 }
