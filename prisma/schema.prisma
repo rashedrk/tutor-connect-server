@@ -18,8 +18,6 @@ model User {
   updated_at DateTime @updatedAt
 
   profile Profile?
-  tutor   Tutor?
-  tution  Tution[]
 }
 
 model Profile {
@@ -45,7 +43,9 @@ model Profile {
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  review Review[]
+  review  Review[]
+  Tutor   Tutor?
+  Tuition Tuition[]
 }
 
 model Address {
@@ -58,14 +58,14 @@ model Address {
   district          String
   presentProfiles   Profile[] @relation(name: "PresentAddress")
   permanentProfiles Profile[] @relation(name: "permanentAddress")
-  tution            Tution[]
+  Tuition           Tuition[]
 }
 
 model Tutor {
   id String @id @default(uuid())
 
-  user_id String @unique
-  user    User   @relation(fields: [user_id], references: [id])
+  user_id String  @unique
+  profile    Profile @relation(fields: [user_id], references: [user_id])
 
   experties        String[]
   yearOfExperience String
@@ -75,11 +75,11 @@ model Tutor {
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 
-  appliedTution      Tution[]             @relation(name: "applied_tutor")
-  selectedTution     Tution[]             @relation(name: "selected_tutor")
+  selectedTuition    Tuition[]            @relation(name: "selected_tutor")
   review             Review[]
   tutorQualification TutorQualification[]
   tutorSchedule      TutorSchedule[]
+  appliedTuition     appliedTuition[]
 }
 
 model Schedule {
@@ -107,7 +107,7 @@ model Qualification {
   id                 String               @id @default(uuid())
   degree             String
   year               String
-  institution        String
+  instiTuition       String
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
   tutorQualification TutorQualification[]
@@ -126,7 +126,7 @@ model TutorQualification {
 model Review {
   id         String   @id @default(uuid())
   student_id String
-  student    Profile? @relation(fields: [student_id], references: [id])
+  student    Profile? @relation(fields: [student_id], references: [user_id])
 
   tutor_id String
   tutor    Tutor? @relation(fields: [tutor_id], references: [id])
@@ -137,32 +137,39 @@ model Review {
   updated_at DateTime @updatedAt
 }
 
-model Tution {
+model Tuition {
   id String @id @default(uuid())
 
   student_id String
-  student    User   @relation(fields: [student_id], references: [id])
+  student    Profile @relation(fields: [student_id], references: [user_id])
 
   subject String
   class   String
   medium  MEDIUM
 
-  address   String
-  addressId Address @relation(fields: [address], references: [id])
+  address_id String
+  address    Address @relation(fields: [address_id], references: [id])
 
-  contactNo String
-  salary    String
-  gender    String
-  status    TUTION_STATUS @default(available)
+  contactNo      String
+  salary         String
+  gender         String
+  status         Tuition_STATUS @default(available)
+  selected_tutor String?
+  selectedTutor  Tutor?         @relation(name: "selected_tutor", fields: [selected_tutor], references: [id])
 
-  applied_tutors String
-  appliedTutor   Tutor? @relation(name: "applied_tutor", fields: [applied_tutors], references: [id])
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  appliedTuition appliedTuition[]
+}
 
-  selected_tutor String
-  selectedTutor  Tutor? @relation(name: "selected_tutor", fields: [selected_tutor], references: [id])
+model appliedTuition {
+  Tuition_id String
+  Tuition    Tuition @relation(fields: [Tuition_id], references: [id])
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  tutor_id String
+  tutor    Tutor  @relation(fields: [tutor_id], references: [id])
+
+  @@id([Tuition_id, tutor_id])
 }
 
 //enums
@@ -189,7 +196,7 @@ enum MEDIUM {
   english
 }
 
-enum TUTION_STATUS {
+enum Tuition_STATUS {
   available
   booked
 }
