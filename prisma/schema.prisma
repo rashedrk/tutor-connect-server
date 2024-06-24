@@ -95,7 +95,7 @@ model Schedule {
 
 model TutorSchedule {
   tutor_id String
-  tuor     Tutor  @relation(fields: [tutor_id], references: [id])
+  tutor     Tutor  @relation(fields: [tutor_id], references: [id])
 
   schedule_id String
   schedule    Schedule @relation(fields: [schedule_id], references: [id])
@@ -163,13 +163,13 @@ model Tuition {
 }
 
 model appliedTuition {
-  Tuition_id String
-  Tuition    Tuition @relation(fields: [Tuition_id], references: [id])
+  tuition_id String
+  tuition    Tuition @relation(fields: [tuition_id], references: [id])
 
   tutor_id String
   tutor    Tutor  @relation(fields: [tutor_id], references: [id])
 
-  @@id([Tuition_id, tutor_id])
+  @@id([tuition_id, tutor_id])
 }
 
 //enums

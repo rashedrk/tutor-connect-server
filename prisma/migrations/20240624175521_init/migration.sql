@@ -99,7 +99,7 @@ CREATE TABLE "Qualification" (
     "id" TEXT NOT NULL,
     "degree" TEXT NOT NULL,
     "year" TEXT NOT NULL,
-    "instiTuition" TEXT NOT NULL,
+    "institution" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -148,10 +148,10 @@ CREATE TABLE "Tuition" (
 
 -- CreateTable
 CREATE TABLE "appliedTuition" (
-    "Tuition_id" TEXT NOT NULL,
+    "tuition_id" TEXT NOT NULL,
     "tutor_id" TEXT NOT NULL,
 
-    CONSTRAINT "appliedTuition_pkey" PRIMARY KEY ("Tuition_id","tutor_id")
+    CONSTRAINT "appliedTuition_pkey" PRIMARY KEY ("tuition_id","tutor_id")
 );
 
 -- CreateIndex
@@ -203,7 +203,7 @@ ALTER TABLE "Tuition" ADD CONSTRAINT "Tuition_address_id_fkey" FOREIGN KEY ("add
 ALTER TABLE "Tuition" ADD CONSTRAINT "Tuition_selected_tutor_fkey" FOREIGN KEY ("selected_tutor") REFERENCES "Tutor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "appliedTuition" ADD CONSTRAINT "appliedTuition_Tuition_id_fkey" FOREIGN KEY ("Tuition_id") REFERENCES "Tuition"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "appliedTuition" ADD CONSTRAINT "appliedTuition_tuition_id_fkey" FOREIGN KEY ("tuition_id") REFERENCES "Tuition"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "appliedTuition" ADD CONSTRAINT "appliedTuition_tutor_id_fkey" FOREIGN KEY ("tutor_id") REFERENCES "Tutor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
