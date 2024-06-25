@@ -3,11 +3,17 @@ import prisma from "../../utils/prisma"
 const getAllTutors = async () => {
     // TODO: add pagination, search and filtering
     const result = prisma.tutor.findMany({
-        include: {
+        select: {
+            id: true,
+            user_id: true,
+            experties: true,
+            details: true,
+            fee: true,
             profile: {
-                include: {
-                    presentAddress: true,
-                    permanentAddress: true,
+                select: {
+                    name: true,
+                    email: true,
+                    profileImage: true,
                 }
             },
             review: true,
@@ -15,7 +21,6 @@ const getAllTutors = async () => {
                 select: {
                     qualification: true
                 }
-
             }
         }
     });
