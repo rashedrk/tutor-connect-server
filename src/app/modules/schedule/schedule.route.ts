@@ -17,7 +17,11 @@ router.get(
 );
 router.get(
     '/:scheduleId',
-    auth(ROLE.tutor, ROLE.admin, ROLE.admin, ROLE.super_admin), scheduleControllers.getAScheduleById
+    auth(ROLE.tutor, ROLE.admin, ROLE.student, ROLE.super_admin), scheduleControllers.getAScheduleById
+);
+router.put(
+    '/:scheduleId',
+    auth(ROLE.tutor, ROLE.admin, ROLE.student, ROLE.super_admin), scheduleControllers.updateSchedule
 )
 
 

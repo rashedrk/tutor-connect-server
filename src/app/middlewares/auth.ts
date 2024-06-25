@@ -58,7 +58,7 @@ const auth = (...requiredRoles: string[]) =>
 
             req.user = decodedToken as TAuthUser;
 
-            console.log(req.user);
+            // console.log(req.user);
             
             next();
         } catch (error) {

@@ -65,8 +65,20 @@ const getAScheduleById = async (scheduleId: string) => {
     return result;
 }
 
+const updateSchedule = async (payload: Partial<Schedule>, scheduleId: string) => {
+    const result = await prisma.schedule.update({
+        where: {
+            id: scheduleId
+        },
+        data: payload
+    });
+
+    return result;
+}
+
 export const scheduleServices = {
     createSchedule,
     getAllSchedule,
     getAScheduleById,
+    updateSchedule
 }
