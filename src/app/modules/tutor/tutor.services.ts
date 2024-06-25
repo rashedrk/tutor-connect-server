@@ -15,7 +15,35 @@ const getAllTutors = async () => {
                 select: {
                     qualification: true
                 }
-                
+
+            }
+        }
+    });
+
+    return result
+}
+
+const getATutorById = async (tutorId: string) => {
+    const result = await prisma.tutor.findUnique({
+        where: {
+            id: tutorId
+        },
+        include: {
+            profile: {
+                include: {
+                    presentAddress: true,
+                    permanentAddress: true,
+                }
+            },
+            tutorSchedule: {
+                include: { schedule: true }
+            },
+            review: true,
+            tutorQualification: {
+                select: {
+                    qualification: true
+                }
+
             }
         }
     });
@@ -25,8 +53,7 @@ const getAllTutors = async () => {
 
 
 
-
-
 export const tutorServices = {
-    getAllTutors
+    getAllTutors,
+    getATutorById
 }

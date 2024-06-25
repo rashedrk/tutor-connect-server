@@ -12,8 +12,20 @@ const getAllTutors = catchAsync(async (req, res) => {
         message: 'All tutors were successfully retrieved',
         data: result
     })
+});
+
+const getATutorById = catchAsync(async (req, res) => {
+    const tutorId = req.params.tutorId;
+    const result = await tutorServices.getATutorById(tutorId);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Tutor  successfully retrieved',
+        data: result
+    })
 })
 
 export const tutorControllers = {
-    getAllTutors
+    getAllTutors,
+    getATutorById
 }
