@@ -5,7 +5,20 @@ import { ROLE } from "@prisma/client";
 
 const router = Router();
 
-router.post('/create', auth(ROLE.tutor), scheduleControllers.createSchedule)
+router.post(
+    '/create',
+    auth(ROLE.tutor),
+    scheduleControllers.createSchedule
+);
+router.get(
+    '/',
+    auth(ROLE.tutor),
+    scheduleControllers.getAllSchedule
+);
+router.get(
+    '/:scheduleId',
+    auth(ROLE.tutor, ROLE.admin, ROLE.admin, ROLE.super_admin), scheduleControllers.getAScheduleById
+)
 
 
 export const scheduleRoutes = router;

@@ -18,7 +18,7 @@ const auth = (...requiredRoles: string[]) =>
             //verify the token and get the user information
             const decodedToken = jwt.verify(authToken, config.jwt_secret as string) as JwtPayload
 
-            console.log(decodedToken);
+            // console.log(decodedToken);
             
 
             //checking if the user exists
