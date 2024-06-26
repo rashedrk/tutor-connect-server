@@ -74,11 +74,33 @@ const updateSchedule = async (payload: Partial<Schedule>, scheduleId: string) =>
     });
 
     return result;
+};
+
+const deleteSchedule = async (scheduleId: string) => {
+    const result = await prisma.$transaction(async (trxClient) => {
+
+        await trxClient.tutorSchedule.deleteMany({
+            where: {
+                schedule_id: scheduleId
+            }
+        })
+
+        const schedule = await trxClient.schedule.delete({
+            where: {
+                id: scheduleId
+            }
+        });
+
+        return schedule
+    })
+
+    return result
 }
 
 export const scheduleServices = {
     createSchedule,
     getAllSchedule,
     getAScheduleById,
-    updateSchedule
+    updateSchedule,
+    deleteSchedule
 }

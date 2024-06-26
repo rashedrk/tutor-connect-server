@@ -23,6 +23,10 @@ router.put(
     '/:scheduleId',
     auth(ROLE.tutor, ROLE.admin, ROLE.student, ROLE.super_admin), scheduleControllers.updateSchedule
 )
+router.delete(
+    '/:scheduleId',
+    auth(ROLE.tutor, ROLE.admin, ROLE.super_admin), scheduleControllers.deleteSchedule
+)
 
 
 export const scheduleRoutes = router;
