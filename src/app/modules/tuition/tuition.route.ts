@@ -11,6 +11,7 @@ router.post('/apply/:tuitionId', auth(ROLE.tutor), tuitionControllers.applyTuiti
 router.get('/applied', auth(ROLE.tutor), tuitionControllers.getMyAppliedTuition);
 router.get('/posted', auth(ROLE.student), tuitionControllers.getMyPostedTuition);
 router.get('/requested', auth(ROLE.student), tuitionControllers.getAllRequestedTutor);
+router.get('/request', auth(ROLE.tutor), tuitionControllers.getAllTuitionRequest);
 router.post('/request/:tutorId', auth(ROLE.student), tuitionControllers.requestToTutor);
 router.get('/:tuitionId', tuitionControllers.getATuitionById);
 
