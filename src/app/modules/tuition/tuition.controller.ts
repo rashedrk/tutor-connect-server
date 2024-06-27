@@ -94,6 +94,20 @@ const requestToTutor = catchAsync(async (req: Request & { user?: TAuthUser},res)
         data: result
     })
 
+});
+
+const getAllRequestedTutor = catchAsync(async (req: Request & { user?: TAuthUser},res) => {
+    const studentId = req?.user?.id as string;
+
+    const result = await tuitionServices.getAllRequestedTutor(studentId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "All requested tutors retrieved successfully",
+        data: result
+    })
+
 })
 
 
@@ -104,5 +118,6 @@ export const tuitionControllers = {
     getMyAppliedTuition,
     getATuitionById,
     getMyPostedTuition,
-    requestToTutor
+    requestToTutor,
+    getAllRequestedTutor
 }

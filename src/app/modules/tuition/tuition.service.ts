@@ -149,6 +149,16 @@ const requestToTutor = async (payload: any, tutorId: string, studentId: string) 
     });
 
     return result
+};
+
+const getAllRequestedTutor = async (studentId: string) => {
+    const result = await prisma.tuitionRequest.findMany({
+        where: {
+            student_id: studentId
+        }
+    });
+
+    return result
 }
 
 export const tuitionServices = {
@@ -158,5 +168,6 @@ export const tuitionServices = {
     applyTuition,
     getMyAppliedTuition,
     getMyPostedTuition,
-    requestToTutor
+    requestToTutor,
+    getAllRequestedTutor
 }
