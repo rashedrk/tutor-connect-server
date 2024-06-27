@@ -2,7 +2,9 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import prisma from "../../utils/prisma";
 import { REQUEST_STATUS } from "@prisma/client";
+import { TAuthUser } from "../../types/global";
 
+//create a tuition - student
 const createTuition = async (payload: any) => {
 
     const result = await prisma.$transaction(async (trxClient) => {
@@ -10,12 +12,18 @@ const createTuition = async (payload: any) => {
             data: payload.address
         });
 
+        const schedule = await trxClient.schedule.create({
+            data: payload.schedule
+        })
+
         delete payload.address;
+        delete payload.schedule;
 
         const tuition = await trxClient.tuition.create({
             data: {
                 ...payload,
                 address_id: address.id,
+                schedule_id: schedule.id
             }
         })
 
@@ -28,6 +36,7 @@ const createTuition = async (payload: any) => {
     return result;
 };
 
+//retrieve all the available tuitions - tutor, students, tutors
 const getAllTuitions = async () => {
     const result = await prisma.tuition.findMany({});
 
@@ -35,6 +44,8 @@ const getAllTuitions = async () => {
     return result;
 };
 
+
+//get specific tuition by id - tutor, students, tutors
 const getATuitionById = async (tuitionId: string) => {
     const result = await prisma.tuition.findUnique({
         where: {
@@ -45,6 +56,7 @@ const getATuitionById = async (tuitionId: string) => {
     return result;
 }
 
+//Tutors will apply to a tuition
 const applyTuition = async (userId: string, tuitionId: string) => {
     const tutor = await prisma.tutor.findUnique({
         where: {
@@ -75,6 +87,7 @@ const applyTuition = async (userId: string, tuitionId: string) => {
     return result;
 };
 
+//tutor can see all the tuitions that he/she applied
 const getMyAppliedTuition = async (userId: string) => {
     //TODO: add pagination , search and filtering
     const tutor = await prisma.tutor.findUnique({
@@ -99,6 +112,7 @@ const getMyAppliedTuition = async (userId: string) => {
     return result;
 }
 
+//students can see all the tuitions that they have posted
 const getMyPostedTuition = async (userId: string) => {
     const result = await prisma.tuition.findMany({
         where: {
@@ -122,6 +136,7 @@ const getMyPostedTuition = async (userId: string) => {
     return result
 };
 
+//student can request to a tutor for tuition
 const requestToTutor = async (payload: any, tutorId: string, studentId: string) => {
     const result = await prisma.$transaction(async (trxClient) => {
         const address = await trxClient.address.create({
@@ -152,6 +167,7 @@ const requestToTutor = async (payload: any, tutorId: string, studentId: string) 
     return result
 };
 
+//student can see all the tuition request that they have made to tutors
 const getAllRequestedTutor = async (studentId: string) => {
     const result = await prisma.tuitionRequest.findMany({
         where: {
@@ -162,6 +178,8 @@ const getAllRequestedTutor = async (studentId: string) => {
     return result
 };
 
+
+//tutors can see all the requested tuitions from the students
 const getAllTuitionRequest = async (userId: string) => {
     const tutor = await prisma.tutor.findUniqueOrThrow({
         where: {
@@ -184,6 +202,8 @@ const getAllTuitionRequest = async (userId: string) => {
     return result
 };
 
+//tutors can change the status of the tuition request
+//they can accept, reject
 const changeTuitionRequestStatus = async (status: REQUEST_STATUS ,userId: string, tuitionId: string) => {
 
     const tutor = await prisma.tutor.findUniqueOrThrow({
@@ -203,6 +223,57 @@ const changeTuitionRequestStatus = async (status: REQUEST_STATUS ,userId: string
     });
 
     return result;
+};
+
+//students can see the list of tuitions they are doing,
+//tutors can see the list of tuitions they are doing
+const getMyCurrentTuitions = async (user: TAuthUser) => {
+    const role = user.role;
+
+    let tuitions = [];
+
+    if (role === 'student') {
+        tuitions = await prisma.tuition.findMany({
+            where: {
+                student_id: user.id,
+                status: 'booked'
+            }
+        })
+    }
+    else if (role === 'tutor'){
+        tuitions = await prisma.tutor.findMany({
+            where: {
+                user_id: user.id,
+            },
+            select: {
+                selectedTuition: true,
+                TuitionRequest: {
+                    where: {
+                        status: "accepted"
+                    }
+                }
+            }
+        });
+ 
+    }
+
+    return tuitions
+}
+
+//students can assign/select a tutor for a specific tuition that they have posted
+const selectTutor = async (tuitionId: string, tutorId: string, studentId: string) => {
+    const tuition = await prisma.tuition.update({
+        where: {
+            id: tuitionId,
+            student_id: studentId
+        },
+        data: {
+            status: "booked",
+            selected_tutor: tutorId
+        }
+    });
+
+    return tuition;
 }
 
 export const tuitionServices = {
@@ -215,5 +286,7 @@ export const tuitionServices = {
     requestToTutor,
     getAllRequestedTutor,
     getAllTuitionRequest,
-    changeTuitionRequestStatus
+    changeTuitionRequestStatus,
+    getMyCurrentTuitions,
+    selectTutor
 }
