@@ -80,6 +80,21 @@ const getMyPostedTuition = catchAsync(async (req: Request & { user?: TAuthUser }
     }) 
 });
 
+const requestToTutor = catchAsync(async (req: Request & { user?: TAuthUser},res) => {
+    const studentId = req?.user?.id as string;
+    const tutorId = req.params.tutorId;
+    const payload = req.body
+
+    const result = await tuitionServices.requestToTutor(payload,tutorId,studentId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: "Request send successfully",
+        data: result
+    })
+
+})
 
 
 export const tuitionControllers = {
@@ -88,5 +103,6 @@ export const tuitionControllers = {
     applyTuition,
     getMyAppliedTuition,
     getATuitionById,
-    getMyPostedTuition
+    getMyPostedTuition,
+    requestToTutor
 }

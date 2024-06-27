@@ -43,22 +43,25 @@ model Profile {
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  review  Review[]
-  Tutor   Tutor?
-  Tuition Tuition[]
+  review         Review[]
+  Tutor          Tutor?
+  Tuition        Tuition[]
+  TutorSchedule  TutorSchedule[]
+  TuitionRequest TuitionRequest[]
 }
 
 model Address {
-  id                String    @id @default(uuid())
+  id                String           @id @default(uuid())
   village           String
   postOffice        String
   postalCode        String
   policeStaion      String
   upozila           String
   district          String
-  presentProfiles   Profile[] @relation(name: "PresentAddress")
-  permanentProfiles Profile[] @relation(name: "permanentAddress")
+  presentProfiles   Profile[]        @relation(name: "PresentAddress")
+  permanentProfiles Profile[]        @relation(name: "permanentAddress")
   Tuition           Tuition[]
+  TuitionRequest    TuitionRequest[]
 }
 
 model Tutor {
@@ -79,26 +82,34 @@ model Tutor {
   review             Review[]
   tutorQualification TutorQualification[]
   tutorSchedule      TutorSchedule[]
-  appliedTuition     appliedTuition[]
+  appliedTuition     AppliedTuition[]
+  TuitionRequest     TuitionRequest[]
 }
 
 model Schedule {
   id         String   @id @default(uuid())
   days       String[]
-  StartDate  DateTime
-  endDate    DateTime
+  startTime  String
+  endTime    String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  tutorSchedule TutorSchedule[]
+  tutorSchedule  TutorSchedule[]
+  Tuition        Tuition?
+  TuitionRequest TuitionRequest?
 }
 
 model TutorSchedule {
   tutor_id String
-  tutor     Tutor  @relation(fields: [tutor_id], references: [id])
+  tutor    Tutor  @relation(fields: [tutor_id], references: [id])
 
   schedule_id String
   schedule    Schedule @relation(fields: [schedule_id], references: [id])
+
+  isBooked Boolean @default(false)
+
+  student_id String?
+  student    Profile? @relation(fields: [student_id], references: [user_id])
 
   @@id([tutor_id, schedule_id])
 }
@@ -157,12 +168,15 @@ model Tuition {
   selected_tutor String?
   selectedTutor  Tutor?         @relation(name: "selected_tutor", fields: [selected_tutor], references: [id])
 
+  schedule_id String   @unique
+  schedule    Schedule @relation(fields: [schedule_id], references: [id])
+
   created_at     DateTime         @default(now())
   updated_at     DateTime         @updatedAt
-  appliedTuition appliedTuition[]
+  appliedTuition AppliedTuition[]
 }
 
-model appliedTuition {
+model AppliedTuition {
   tuition_id String
   tuition    Tuition @relation(fields: [tuition_id], references: [id])
 
@@ -170,6 +184,30 @@ model appliedTuition {
   tutor    Tutor  @relation(fields: [tutor_id], references: [id])
 
   @@id([tuition_id, tutor_id])
+}
+
+model TuitionRequest {
+  id String @id @default(uuid())
+
+  tutor_id String
+  tutor    Tutor  @relation(fields: [tutor_id], references: [id])
+
+  student_id String
+  student    Profile? @relation(fields: [student_id], references: [user_id])
+
+  subject String
+  class   String
+  medium  MEDIUM
+
+  address_id String
+  address    Address @relation(fields: [address_id], references: [id])
+
+  contactNo String
+  salary    String
+  status    REQUEST_STATUS @default(pending)
+
+  schedule_id String   @unique
+  schedule    Schedule @relation(fields: [schedule_id], references: [id])
 }
 
 //enums
@@ -199,4 +237,10 @@ enum MEDIUM {
 enum Tuition_STATUS {
   available
   booked
+}
+
+enum REQUEST_STATUS {
+  accepted
+  pending
+  rejected
 }
