@@ -122,7 +122,23 @@ const getAllTuitionRequest = catchAsync(async (req: Request & { user?: TAuthUser
         data: result
     })
 
-})
+});
+
+const changeTuitionRequestStatus = catchAsync(async (req: Request & { user?: TAuthUser},res) => {
+    const userId = req?.user?.id as string;
+    const tuitionId = req.params.tuitionId;
+    const status = req.body.status
+
+    const result = await tuitionServices.changeTuitionRequestStatus(status,userId,tuitionId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Request status updated successfully",
+        data: result
+    })
+
+});
 
 
 export const tuitionControllers = {
@@ -134,5 +150,6 @@ export const tuitionControllers = {
     getMyPostedTuition,
     requestToTutor,
     getAllRequestedTutor,
-    getAllTuitionRequest
+    getAllTuitionRequest,
+    changeTuitionRequestStatus
 }

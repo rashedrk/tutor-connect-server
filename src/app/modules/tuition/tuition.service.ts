@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import prisma from "../../utils/prisma";
+import { REQUEST_STATUS } from "@prisma/client";
 
 const createTuition = async (payload: any) => {
 
@@ -183,6 +184,27 @@ const getAllTuitionRequest = async (userId: string) => {
     return result
 };
 
+const changeTuitionRequestStatus = async (status: REQUEST_STATUS ,userId: string, tuitionId: string) => {
+
+    const tutor = await prisma.tutor.findUniqueOrThrow({
+        where: {
+            user_id: userId
+        }
+    })
+
+    const result = await prisma.tuitionRequest.update({
+        where: {
+            id: tuitionId,
+            tutor_id: tutor.id
+        },
+        data: {
+            status: status
+        }
+    });
+
+    return result;
+}
+
 export const tuitionServices = {
     createTuition,
     getAllTuitions,
@@ -192,5 +214,6 @@ export const tuitionServices = {
     getMyPostedTuition,
     requestToTutor,
     getAllRequestedTutor,
-    getAllTuitionRequest
+    getAllTuitionRequest,
+    changeTuitionRequestStatus
 }
