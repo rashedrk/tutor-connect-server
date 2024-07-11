@@ -1,8 +1,117 @@
+import { Prisma } from "@prisma/client";
+import { TPaginationOptions } from "../../types/global";
+import { calculatePagination } from "../../utils/calculatePagination";
 import prisma from "../../utils/prisma"
+import { TTutorFilterRequest } from "./tutor.interface";
+import { addArrayFieldFilter } from "../../utils/SearchFilter";
 
-const getAllTutors = async () => {
-    // TODO: add pagination, search and filtering
-    const result = prisma.tutor.findMany({
+const getAllTutors = async (filters: TTutorFilterRequest, options: TPaginationOptions) => {
+    const { page, limit, skip } = calculatePagination(options);
+    const { searchTerm, upozila, district, gender, class: studentClass, experties, medium } = filters;
+
+    const andConditions: Prisma.TutorWhereInput[] = [];
+
+    //search
+    if (searchTerm) {
+        andConditions.push({
+            OR: [
+                { // Searching in name , email field
+                    profile: {
+                        OR: [
+                            {
+                                name: {
+                                    contains: searchTerm,
+                                    mode: 'insensitive',
+                                },
+                            },
+                            {
+                                email: {
+                                    contains: searchTerm,
+                                    mode: 'insensitive',
+                                },
+                            }
+                        ]
+                    },
+                },
+                { // Searching in expertise array
+                    experties: {
+                        hasSome: searchTerm.split(" "),
+                    },
+                },
+
+                { // Searching in tutorQualification
+                    tutorQualification: {
+                        some: {
+                            qualification: {
+                                OR: [
+                                    { // Searching in degree field
+                                        degree: {
+                                            contains: searchTerm,
+                                            mode: 'insensitive',
+                                        },
+                                    },
+                                    { // Searching in institution field
+                                        institution: {
+                                            contains: searchTerm,
+                                            mode: 'insensitive',
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                }
+            ]
+        });
+    }
+
+    // --------------filter ------------------- 
+    if (upozila) {
+        andConditions.push({
+            profile: {
+                presentAddress: {
+                    upozila: {
+                        equals: upozila,
+                    },
+                },
+            },
+        });
+    }
+
+    if (district) {
+        andConditions.push({
+            profile: {
+                presentAddress: {
+                    district: {
+                        equals: district,
+                    },
+                },
+            },
+        });
+    }
+
+    if (gender) {
+        andConditions.push({
+            profile: {
+                gender: {
+                    equals: gender,
+                },
+            },
+        });
+    }
+
+    addArrayFieldFilter(andConditions, 'medium', medium);
+    addArrayFieldFilter(andConditions, 'class', Number(studentClass));
+    addArrayFieldFilter(andConditions, 'experties', experties);
+    // ---------------filter end --------------------------
+
+    const whereConditions: Prisma.TutorWhereInput =
+        andConditions.length > 0 ? { AND: andConditions } : {};
+
+    const result = await prisma.tutor.findMany({
+        where: whereConditions,
+        skip,
+        take: limit,
         select: {
             id: true,
             user_id: true,
@@ -22,10 +131,21 @@ const getAllTutors = async () => {
                     qualification: true
                 }
             }
-        }
+        },
     });
 
-    return result
+    const total = await prisma.tutor.count({
+        where: whereConditions,
+    });
+
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+        },
+        data: result,
+    }
 }
 
 const getATutorById = async (tutorId: string) => {

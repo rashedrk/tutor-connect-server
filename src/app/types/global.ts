@@ -7,3 +7,10 @@ export type TAuthUser = {
     iat: number,
     exp: number
 }
+
+export type TPaginationOptions = {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+};

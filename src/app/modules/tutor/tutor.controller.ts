@@ -2,15 +2,21 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { tutorServices } from "./tutor.services";
+import pick from "../../utils/pick";
+import { tutorFilterableFields } from "./tutor.constant";
 
 const getAllTutors = catchAsync(async (req, res) => {
-    const result = await tutorServices.getAllTutors();
+    const filters = pick(req.query, tutorFilterableFields);
+    const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+
+    const result = await tutorServices.getAllTutors(filters, options);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: 'All tutors were successfully retrieved',
-        data: result
+        meta: result.meta,
+        data: result.data
     })
 });
 
