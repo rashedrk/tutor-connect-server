@@ -51,14 +51,14 @@ const createStudent = async (payload: TUser) => {
 
         await trxClient.profile.create({
             data: {
-                user_id: user.id,
+                user_id: user.user_id,
                 name: payload.name,
                 email: payload.email,
                 gender: payload.gender,
                 dateOfBirth: payload.dateOfBirth,
                 contactNo: payload.contactNo,
-                presentAddressId: presentAddress.id,
-                permanentAddressId: permanentAddress.id,
+                presentAddressId: presentAddress.address_id,
+                permanentAddressId: permanentAddress.address_id,
                 profileImage: payload.profileImage,
             }
         });
@@ -66,10 +66,10 @@ const createStudent = async (payload: TUser) => {
         //find the user information that is created and send it 
         const student = await trxClient.user.findUnique({
             where: {
-                id: user.id
+                user_id: user.user_id
             },
             select: {
-                id: true,
+                user_id: true,
                 email: true,
                 role: true,
                 created_at: true,
@@ -134,21 +134,21 @@ const createTutor = async (payload: TTutor) => {
 
         const newProfile = await trxClient.profile.create({
             data: {
-                user_id: user.id,
+                user_id: user.user_id,
                 name: payload.name,
                 email: payload.email,
                 gender: payload.gender,
                 dateOfBirth: payload.dateOfBirth,
                 contactNo: payload.contactNo,
-                presentAddressId: presentAddress.id,
-                permanentAddressId: permanentAddress.id,
+                presentAddressId: presentAddress.address_id,
+                permanentAddressId: permanentAddress.address_id,
                 profileImage: payload.profileImage,
             }
         });
 
         const newTutor = await trxClient.tutor.create({
             data: {
-                user_id: user.id,
+                user_id: user.user_id,
                 experties: payload.expertise,
                 yearOfExperience: payload.yearOfExperience,
                 fee: payload.fee,
@@ -167,18 +167,18 @@ const createTutor = async (payload: TTutor) => {
 
         await trxClient.tutorQualification.create({
             data: {
-                tutor_id: newTutor.id,
-                qualification_id: qualification.id
+                tutor_id: newTutor.tutor_id,
+                qualification_id: qualification.qualification_id
             }
         })
 
         //find the user information that is created and send it 
         const tutor = await trxClient.user.findUnique({
             where: {
-                id: user.id
+                user_id: user.user_id
             },
             select: {
-                id: true,
+                user_id: true,
                 email: true,
                 role: true,
                 created_at: true,
@@ -205,10 +205,10 @@ const createTutor = async (payload: TTutor) => {
 const getMyProfile = async (userId: string) => {
     const user = await prisma.user.findUniqueOrThrow({
         where: {
-            id: userId
+            user_id: userId
         },
         select: {
-            id: true,
+            user_id: true,
             email: true,
             role: true,
             created_at: true,

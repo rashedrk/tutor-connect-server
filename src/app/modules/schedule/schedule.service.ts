@@ -21,8 +21,8 @@ const createSchedule = async (payload: Schedule, userId: string) => {
 
         await trxClient.tutorSchedule.create({
             data: {
-                schedule_id: schedule.id,
-                tutor_id: tutor.id
+                schedule_id: schedule.schedule_id,
+                tutor_id: tutor.tutor_id
             }
         })
 
@@ -45,7 +45,7 @@ const getAllSchedule = async (userId: string) => {
 
     const result = await prisma.tutorSchedule.findMany({
         where: {
-            tutor_id: tutor.id
+            tutor_id: tutor.tutor_id
         },
         select: {
             schedule: true
@@ -58,7 +58,7 @@ const getAllSchedule = async (userId: string) => {
 const getAScheduleById = async (scheduleId: string) => {
     const result = await prisma.schedule.findUniqueOrThrow({
         where: {
-            id: scheduleId
+            schedule_id: scheduleId
         }
     });
 
@@ -68,7 +68,7 @@ const getAScheduleById = async (scheduleId: string) => {
 const updateSchedule = async (payload: Partial<Schedule>, scheduleId: string) => {
     const result = await prisma.schedule.update({
         where: {
-            id: scheduleId
+            schedule_id: scheduleId
         },
         data: payload
     });
@@ -87,7 +87,7 @@ const deleteSchedule = async (scheduleId: string) => {
 
         const schedule = await trxClient.schedule.delete({
             where: {
-                id: scheduleId
+                schedule_id: scheduleId
             }
         });
 

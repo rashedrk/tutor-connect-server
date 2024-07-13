@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
+  user_id    String   @id @default(uuid())
   email      String   @unique
   password   String
   role       ROLE
@@ -21,10 +21,10 @@ model User {
 }
 
 model Profile {
-  id String @id @default(uuid())
+  profile_id String @id @default(uuid())
 
   user_id String @unique
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [user_id])
 
   name        String
   email       String
@@ -33,10 +33,10 @@ model Profile {
   contactNo   String
 
   presentAddressId String
-  presentAddress   FullAddress @relation(name: "PresentAddress", fields: [presentAddressId], references: [id])
+  presentAddress   FullAddress @relation(name: "PresentAddress", fields: [presentAddressId], references: [address_id])
 
   permanentAddressId String
-  permanentAddress   FullAddress @relation(name: "permanentAddress", fields: [permanentAddressId], references: [id])
+  permanentAddress   FullAddress @relation(name: "permanentAddress", fields: [permanentAddressId], references: [address_id])
 
   profileImage String?
   isDeleted    Boolean  @default(false)
@@ -51,7 +51,7 @@ model Profile {
 }
 
 model FullAddress {
-  id                String           @id @default(uuid())
+  address_id                String           @id @default(uuid())
   address           String
   area              String
   district          String
@@ -62,7 +62,7 @@ model FullAddress {
 }
 
 model Tutor {
-  id String @id @default(uuid())
+  tutor_id String @id @default(uuid())
 
   user_id String  @unique
   profile Profile @relation(fields: [user_id], references: [user_id])
@@ -86,7 +86,7 @@ model Tutor {
 }
 
 model Schedule {
-  id         String   @id @default(uuid())
+  schedule_id         String   @id @default(uuid())
   days       String[]
   startTime  String
   endTime    String
@@ -100,10 +100,10 @@ model Schedule {
 
 model TutorSchedule {
   tutor_id String
-  tutor    Tutor  @relation(fields: [tutor_id], references: [id])
+  tutor    Tutor  @relation(fields: [tutor_id], references: [tutor_id])
 
   schedule_id String
-  schedule    Schedule @relation(fields: [schedule_id], references: [id])
+  schedule    Schedule @relation(fields: [schedule_id], references: [schedule_id])
 
   isBooked Boolean @default(false)
 
@@ -114,7 +114,7 @@ model TutorSchedule {
 }
 
 model Qualification {
-  id                 String               @id @default(uuid())
+  qualification_id                 String               @id @default(uuid())
   degree             String
   year               String
   institution        String
@@ -125,21 +125,21 @@ model Qualification {
 
 model TutorQualification {
   tutor_id String
-  tutor    Tutor  @relation(fields: [tutor_id], references: [id])
+  tutor    Tutor  @relation(fields: [tutor_id], references: [tutor_id])
 
   qualification_id String
-  qualification    Qualification @relation(fields: [qualification_id], references: [id])
+  qualification    Qualification @relation(fields: [qualification_id], references: [qualification_id])
 
   @@id([tutor_id, qualification_id])
 }
 
 model Review {
-  id         String   @id @default(uuid())
+  review_id         String   @id @default(uuid())
   student_id String
   student    Profile? @relation(fields: [student_id], references: [user_id])
 
   tutor_id String
-  tutor    Tutor? @relation(fields: [tutor_id], references: [id])
+  tutor    Tutor? @relation(fields: [tutor_id], references: [tutor_id])
 
   rating     String
   comment    String
@@ -148,7 +148,7 @@ model Review {
 }
 
 model Tuition {
-  id String @id @default(uuid())
+  tuition_id String @id @default(uuid())
 
   student_id String
   student    Profile @relation(fields: [student_id], references: [user_id])
@@ -158,17 +158,17 @@ model Tuition {
   medium  MEDIUM
 
   address_id String
-  address    FullAddress @relation(fields: [address_id], references: [id])
+  address    FullAddress @relation(fields: [address_id], references: [address_id])
 
   contactNo      String
   salary         String
   gender         String
   status         Tuition_STATUS @default(available)
   selected_tutor String?
-  selectedTutor  Tutor?         @relation(name: "selected_tutor", fields: [selected_tutor], references: [id])
+  selectedTutor  Tutor?         @relation(name: "selected_tutor", fields: [selected_tutor], references: [tutor_id])
 
   schedule_id String   @unique
-  schedule    Schedule @relation(fields: [schedule_id], references: [id])
+  schedule    Schedule @relation(fields: [schedule_id], references: [schedule_id])
 
   created_at     DateTime         @default(now())
   updated_at     DateTime         @updatedAt
@@ -177,19 +177,19 @@ model Tuition {
 
 model AppliedTuition {
   tuition_id String
-  tuition    Tuition @relation(fields: [tuition_id], references: [id])
+  tuition    Tuition @relation(fields: [tuition_id], references: [tuition_id])
 
   tutor_id String
-  tutor    Tutor  @relation(fields: [tutor_id], references: [id])
+  tutor    Tutor  @relation(fields: [tutor_id], references: [tutor_id])
 
   @@id([tuition_id, tutor_id])
 }
 
 model TuitionRequest {
-  id String @id @default(uuid())
+  tuition_request_id String @id @default(uuid())
 
   tutor_id String
-  tutor    Tutor  @relation(fields: [tutor_id], references: [id])
+  tutor    Tutor  @relation(fields: [tutor_id], references: [tutor_id])
 
   student_id String
   student    Profile? @relation(fields: [student_id], references: [user_id])
@@ -199,14 +199,14 @@ model TuitionRequest {
   medium  MEDIUM
 
   address_id String
-  address    FullAddress @relation(fields: [address_id], references: [id])
+  address    FullAddress @relation(fields: [address_id], references: [address_id])
 
   contactNo String
   salary    String
   status    REQUEST_STATUS @default(pending)
 
   schedule_id String   @unique
-  schedule    Schedule @relation(fields: [schedule_id], references: [id])
+  schedule    Schedule @relation(fields: [schedule_id], references: [schedule_id])
 }
 
 //enums

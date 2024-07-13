@@ -39,12 +39,12 @@ const login = async (payload: TAuth) => {
 
     const profile = await prisma.profile.findUnique({
         where: {
-            user_id: user?.id
+            user_id: user?.user_id
         }
     });
 
     const jwtPayload = {
-        id: user.id,
+        id: user.user_id,
         email: user.email,
         role: user.role,
         profileImage: profile?.profileImage

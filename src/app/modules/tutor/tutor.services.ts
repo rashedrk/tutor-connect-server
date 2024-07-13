@@ -103,6 +103,7 @@ const getAllTutors = async (filters: TTutorFilterRequest, options: TPaginationOp
     addArrayFieldFilter(andConditions, 'medium', medium);
     addArrayFieldFilter(andConditions, 'class', Number(studentClass));
     addArrayFieldFilter(andConditions, 'experties', experties);
+    
     // ---------------filter end --------------------------
 
     const whereConditions: Prisma.TutorWhereInput =
@@ -113,7 +114,7 @@ const getAllTutors = async (filters: TTutorFilterRequest, options: TPaginationOp
         skip,
         take: limit,
         select: {
-            id: true,
+            tutor_id: true,
             user_id: true,
             experties: true,
             details: true,
@@ -151,7 +152,7 @@ const getAllTutors = async (filters: TTutorFilterRequest, options: TPaginationOp
 const getATutorById = async (tutorId: string) => {
     const result = await prisma.tutor.findUnique({
         where: {
-            id: tutorId
+            tutor_id: tutorId
         },
         include: {
             profile: {
