@@ -233,7 +233,7 @@ const getMyCurrentTuitions = async (user: TAuthUser) => {
     if (role === 'student') {
         const tuitions = await prisma.tuition.findMany({
             where: {
-                student_id: user.id,
+                student_id: user.user_id,
                 status: 'booked'
             }
         })
@@ -242,7 +242,7 @@ const getMyCurrentTuitions = async (user: TAuthUser) => {
     else if (role === 'tutor') {
         const tuitions = await prisma.tutor.findMany({
             where: {
-                user_id: user.id,
+                user_id: user.user_id,
             },
             select: {
                 selectedTuition: true,

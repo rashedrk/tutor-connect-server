@@ -1,7 +1,7 @@
 import { ROLE } from "@prisma/client"
 
 export type TAuthUser = {
-    id: string,
+    user_id: string,
     email: string,
     role: ROLE,
     iat: number,
