@@ -12,6 +12,7 @@ const login = async (payload: TAuth) => {
             email: payload.email
         }
     });
+   
 
     //throw error if user does not exist
     if (!user) {
@@ -36,10 +37,17 @@ const login = async (payload: TAuth) => {
         throw new AppError(httpStatus.UNAUTHORIZED, "Password is incorrect!");
     }
 
+    const profile = await prisma.profile.findUnique({
+        where: {
+            user_id: user?.id
+        }
+    });
+
     const jwtPayload = {
         id: user.id,
         email: user.email,
         role: user.role,
+        profileImage: profile?.profileImage
     }
 
     const refreshToken = jwt.sign(jwtPayload, config.refresh_secret as string, {
