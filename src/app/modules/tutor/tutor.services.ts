@@ -7,7 +7,7 @@ import { addArrayFieldFilter } from "../../utils/SearchFilter";
 
 const getAllTutors = async (filters: TTutorFilterRequest, options: TPaginationOptions) => {
     const { page, limit, skip } = calculatePagination(options);
-    const { searchTerm, upozila, district, gender, class: studentClass, experties, medium } = filters;
+    const { searchTerm, area, district, gender, class: studentClass, experties, medium } = filters;
 
     const andConditions: Prisma.TutorWhereInput[] = [];
 
@@ -66,12 +66,12 @@ const getAllTutors = async (filters: TTutorFilterRequest, options: TPaginationOp
     }
 
     // --------------filter ------------------- 
-    if (upozila) {
+    if (area) {
         andConditions.push({
             profile: {
                 presentAddress: {
-                    upozila: {
-                        equals: upozila,
+                    area: {
+                        equals: area,
                     },
                 },
             },

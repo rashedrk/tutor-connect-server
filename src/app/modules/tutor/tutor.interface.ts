@@ -5,7 +5,7 @@ export type TTutorFilterRequest = {
     class?: number | undefined;
     medium?: MEDIUM | undefined;
     gender?: GENDER | undefined;
-    upozila?: string | undefined;
+    area?: string | undefined;
     district?: string | undefined;
     experties?: string | undefined;
   };

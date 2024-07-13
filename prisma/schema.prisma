@@ -33,10 +33,10 @@ model Profile {
   contactNo   String
 
   presentAddressId String
-  presentAddress   Address @relation(name: "PresentAddress", fields: [presentAddressId], references: [id])
+  presentAddress   FullAddress @relation(name: "PresentAddress", fields: [presentAddressId], references: [id])
 
   permanentAddressId String
-  permanentAddress   Address @relation(name: "permanentAddress", fields: [permanentAddressId], references: [id])
+  permanentAddress   FullAddress @relation(name: "permanentAddress", fields: [permanentAddressId], references: [id])
 
   profileImage String?
   isDeleted    Boolean  @default(false)
@@ -50,13 +50,10 @@ model Profile {
   TuitionRequest TuitionRequest[]
 }
 
-model Address {
+model FullAddress {
   id                String           @id @default(uuid())
-  village           String
-  postOffice        String
-  postalCode        String
-  policeStaion      String
-  upozila           String
+  address           String
+  area              String
   district          String
   presentProfiles   Profile[]        @relation(name: "PresentAddress")
   permanentProfiles Profile[]        @relation(name: "permanentAddress")
@@ -161,7 +158,7 @@ model Tuition {
   medium  MEDIUM
 
   address_id String
-  address    Address @relation(fields: [address_id], references: [id])
+  address    FullAddress @relation(fields: [address_id], references: [id])
 
   contactNo      String
   salary         String
@@ -202,7 +199,7 @@ model TuitionRequest {
   medium  MEDIUM
 
   address_id String
-  address    Address @relation(fields: [address_id], references: [id])
+  address    FullAddress @relation(fields: [address_id], references: [id])
 
   contactNo String
   salary    String
