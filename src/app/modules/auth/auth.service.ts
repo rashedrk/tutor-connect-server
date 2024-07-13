@@ -44,7 +44,7 @@ const login = async (payload: TAuth) => {
     });
 
     const jwtPayload = {
-        id: user.user_id,
+        user_id: user.user_id,
         email: user.email,
         role: user.role,
         profileImage: profile?.profileImage

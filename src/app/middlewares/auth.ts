@@ -24,10 +24,10 @@ const auth = (...requiredRoles: string[]) =>
             //checking if the user exists
             const user = await prisma.user.findUnique({
                 where: {
-                    id: decodedToken.id,
+                    user_id: decodedToken.user_id,
                 },
                 select: {
-                    id: true,
+                    user_id: true,
                     email: true,
                     is_deleted: true,
                     status: true,
