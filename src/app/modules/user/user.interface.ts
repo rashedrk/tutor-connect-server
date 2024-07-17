@@ -1,4 +1,4 @@
-import { Address, GENDER, Qualification, User } from "@prisma/client";
+import { FullAddress, GENDER, Qualification, User } from "@prisma/client";
 
 export type TUser = {
   user_id: string;
@@ -7,8 +7,8 @@ export type TUser = {
   gender: GENDER;
   dateOfBirth: Date;
   contactNo: string;
-  presentAddress: Address;
-  permanentAddress: Address;
+  presentAddress: FullAddress;
+  permanentAddress: FullAddress;
   profileImage?: string;
   isDeleted?: boolean;
 } & User
@@ -21,13 +21,12 @@ export type TTutor = {
     gender: GENDER;
     dateOfBirth: string;
     contactNo: string;
-    presentAddress: Address;
-    permanentAddress: Address;
+    presentAddress: FullAddress;
+    permanentAddress: FullAddress;
     profileImage: string;
     expertise: string[];
     yearOfExperience: string;
     fee: string;
     details: string;
-    location: string;
     qualification: Qualification,
 }

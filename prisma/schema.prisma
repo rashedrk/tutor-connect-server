@@ -73,7 +73,6 @@ model Tutor {
   yearOfExperience String
   fee              String
   details          String
-  location         String
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 
@@ -154,7 +153,7 @@ model Tuition {
   student    Profile @relation(fields: [student_id], references: [user_id])
 
   subject String
-  class   Int[]
+  class   Int
   medium  MEDIUM
 
   address_id String

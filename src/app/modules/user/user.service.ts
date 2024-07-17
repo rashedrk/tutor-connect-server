@@ -153,7 +153,6 @@ const createTutor = async (payload: TTutor) => {
                 yearOfExperience: payload.yearOfExperience,
                 fee: payload.fee,
                 details: payload.details,
-                location: payload.location,
             }
         });
 
