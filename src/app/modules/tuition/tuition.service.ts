@@ -168,10 +168,23 @@ const requestToTutor = async (payload: any, tutorId: string, studentId: string) 
 };
 
 //student can see all the tuition request that they have made to tutors
-const getAllRequestedTutor = async (studentId: string) => {
+const getMyTutorRequest = async (studentId: string) => {
     const result = await prisma.tuitionRequest.findMany({
         where: {
             student_id: studentId
+        },
+        include: {
+            tutor: {
+                include: {
+                    profile: {
+                        select: {
+                            name: true,
+                            contactNo: true,
+                            email: true
+                        }
+                    }
+                }
+            },
         }
     });
 
@@ -313,7 +326,7 @@ export const tuitionServices = {
     getMyAppliedTuition,
     getMyPostedTuition,
     requestToTutor,
-    getAllRequestedTutor,
+    getMyTutorRequest,
     getAllTuitionRequest,
     changeTuitionRequestStatus,
     getMyCurrentTuitions,

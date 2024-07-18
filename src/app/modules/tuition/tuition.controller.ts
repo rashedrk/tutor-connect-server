@@ -98,10 +98,10 @@ const requestToTutor = catchAsync(async (req: Request & { user?: TAuthUser }, re
 
 });
 
-const getAllRequestedTutor = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
+const getMyTutorRequest = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
     const studentId = req?.user?.user_id as string;
 
-    const result = await tuitionServices.getAllRequestedTutor(studentId);
+    const result = await tuitionServices.getMyTutorRequest(studentId);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -194,7 +194,7 @@ export const tuitionControllers = {
     getATuitionById,
     getMyPostedTuition,
     requestToTutor,
-    getAllRequestedTutor,
+    getMyTutorRequest,
     getAllTuitionRequest,
     changeTuitionRequestStatus,
     getMyCurrentTuitions,

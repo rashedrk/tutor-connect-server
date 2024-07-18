@@ -51,7 +51,7 @@ model Profile {
 }
 
 model FullAddress {
-  address_id                String           @id @default(uuid())
+  address_id        String           @id @default(uuid())
   address           String
   area              String
   district          String
@@ -73,6 +73,7 @@ model Tutor {
   yearOfExperience String
   fee              String
   details          String
+  rating           Float      @default(3.0)
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 
@@ -85,12 +86,12 @@ model Tutor {
 }
 
 model Schedule {
-  schedule_id         String   @id @default(uuid())
-  days       String[]
-  startTime  String
-  endTime    String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  schedule_id String   @id @default(uuid())
+  days        String[]
+  startTime   String
+  endTime     String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
   tutorSchedule  TutorSchedule[]
   Tuition        Tuition?
@@ -113,7 +114,7 @@ model TutorSchedule {
 }
 
 model Qualification {
-  qualification_id                 String               @id @default(uuid())
+  qualification_id   String               @id @default(uuid())
   degree             String
   year               String
   institution        String
@@ -133,7 +134,7 @@ model TutorQualification {
 }
 
 model Review {
-  review_id         String   @id @default(uuid())
+  review_id  String   @id @default(uuid())
   student_id String
   student    Profile? @relation(fields: [student_id], references: [user_id])
 

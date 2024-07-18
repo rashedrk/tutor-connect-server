@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Tutor" ADD COLUMN     "rating" INTEGER NOT NULL DEFAULT 3;
