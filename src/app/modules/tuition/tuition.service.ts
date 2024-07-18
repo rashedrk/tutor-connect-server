@@ -274,6 +274,29 @@ const selectTutor = async (tuitionId: string, tutorId: string, studentId: string
     return tuition;
 }
 
+
+const getAppliedTutors  = async (tuitionId: string) => {
+    const result = await prisma.appliedTuition.findMany({
+        where: {
+            tuition_id: tuitionId
+        },
+        select: {
+            tuition_id: true,
+            tutor: {
+                include: {
+                    tutorQualification: {
+                        select: {
+                            qualification: true
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    return result;
+}
+
 export const tuitionServices = {
     createTuition,
     getAllTuitions,
@@ -286,5 +309,6 @@ export const tuitionServices = {
     getAllTuitionRequest,
     changeTuitionRequestStatus,
     getMyCurrentTuitions,
-    selectTutor
+    selectTutor,
+    getAppliedTutors
 }

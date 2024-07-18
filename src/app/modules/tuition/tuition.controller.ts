@@ -54,6 +54,7 @@ const applyTuition = catchAsync(async (req: Request & { user?: TAuthUser }, res)
     })
 });
 
+
 const getMyAppliedTuition = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
     const userId = req?.user?.user_id as string;
 
@@ -67,6 +68,7 @@ const getMyAppliedTuition = catchAsync(async (req: Request & { user?: TAuthUser 
     })
 });
 
+//for student
 const getMyPostedTuition = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
     const userId = req?.user?.user_id as string;
 
@@ -170,6 +172,19 @@ const selectTutor = catchAsync(async (req: Request & { user?: TAuthUser }, res) 
 
 });
 
+const getAppliedTutors = catchAsync(async (req, res) => {
+    const tuitionId = req.params.tuitionId;
+
+    const result = await tuitionServices.getAppliedTutors(tuitionId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Applied Tutors retrieved successfully",
+        data: result
+    })
+});
+
 
 export const tuitionControllers = {
     createTuition,
@@ -183,5 +198,6 @@ export const tuitionControllers = {
     getAllTuitionRequest,
     changeTuitionRequestStatus,
     getMyCurrentTuitions,
-    selectTutor
+    selectTutor,
+    getAppliedTutors
 }
