@@ -242,4 +242,5 @@ enum REQUEST_STATUS {
   accepted
   pending
   rejected
+  cancelled
 }

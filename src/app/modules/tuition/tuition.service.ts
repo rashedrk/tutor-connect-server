@@ -197,14 +197,18 @@ const getMyTutorRequest = async (studentId: string) => {
 const getAllTuitionRequest = async (userId: string) => {
     const tutor = await prisma.tutor.findUniqueOrThrow({
         where: {
-            user_id: userId
+            user_id: userId,
+
         }
     })
 
 
     const result = await prisma.tuitionRequest.findMany({
         where: {
-            tutor_id: tutor.tutor_id
+            tutor_id: tutor.tutor_id,
+            status: {
+                not: 'cancelled'
+            }
         },
         include: {
             student: true,
@@ -289,7 +293,7 @@ const selectTutor = async (tuitionId: string, tutorId: string, studentId: string
 }
 
 
-const getAppliedTutors  = async (tuitionId: string) => {
+const getAppliedTutors = async (tuitionId: string) => {
     const result = await prisma.appliedTuition.findMany({
         where: {
             tuition_id: tuitionId
@@ -299,7 +303,7 @@ const getAppliedTutors  = async (tuitionId: string) => {
             tutor: {
                 include: {
                     profile: {
-                        select:{
+                        select: {
                             name: true,
                             email: true,
                             contactNo: true,
@@ -319,6 +323,20 @@ const getAppliedTutors  = async (tuitionId: string) => {
     return result;
 }
 
+const cancelTuitionRequest = async(tuition_request_id: string, student_id: string) => {
+const result = await prisma.tuitionRequest.update({
+    where: {
+        tuition_request_id,
+        student_id
+    },
+    data: {
+        status: 'cancelled'
+    }
+});
+
+return result;
+}
+
 export const tuitionServices = {
     createTuition,
     getAllTuitions,
@@ -332,5 +350,6 @@ export const tuitionServices = {
     changeTuitionRequestStatus,
     getMyCurrentTuitions,
     selectTutor,
-    getAppliedTutors
+    getAppliedTutors,
+    cancelTuitionRequest
 }

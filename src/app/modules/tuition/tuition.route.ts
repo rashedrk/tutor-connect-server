@@ -18,5 +18,6 @@ router.get('/current', auth(ROLE.tutor, ROLE.student), tuitionControllers.getMyC
 router.post('/select/:tutorId', auth(ROLE.student), tuitionControllers.selectTutor);
 router.get('/:tuitionId', tuitionControllers.getATuitionById);
 router.get('/:tuitionId/applied', tuitionControllers.getAppliedTutors);
+router.put('/cancel/:tuitionRequestId', auth(ROLE.student), tuitionControllers.cancelTuitionRequest);
 
 export const tuitionRoutes = router
