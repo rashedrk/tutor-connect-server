@@ -174,8 +174,9 @@ const getMyTutorRequest = async (studentId: string) => {
             student_id: studentId
         },
         include: {
+            address: true,
             tutor: {
-                include: {
+                select: {
                     profile: {
                         select: {
                             name: true,
