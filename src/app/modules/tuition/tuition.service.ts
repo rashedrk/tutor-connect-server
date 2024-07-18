@@ -284,6 +284,14 @@ const getAppliedTutors  = async (tuitionId: string) => {
             tuition_id: true,
             tutor: {
                 include: {
+                    profile: {
+                        select:{
+                            name: true,
+                            email: true,
+                            contactNo: true,
+                            gender: true,
+                        }
+                    },
                     tutorQualification: {
                         select: {
                             qualification: true
