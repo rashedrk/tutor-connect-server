@@ -38,7 +38,11 @@ const createTuition = async (payload: any) => {
 
 //retrieve all the available tuitions - tutor, students, tutors
 const getAllTuitions = async () => {
-    const result = await prisma.tuition.findMany({});
+    const result = await prisma.tuition.findMany({
+        include: {
+            schedule: true,
+        }
+    });
 
     //TODO: add pagination , search and filtering
     return result;
