@@ -37,12 +37,27 @@ const createTuition = async (payload: any) => {
 };
 
 //retrieve all the available tuitions - tutor, students, tutors
-const getAllTuitions = async () => {
-    const result = await prisma.tuition.findMany({
+const getAllTuitions = async (user_id: string) => {
+    const tutor = await prisma.tutor.findUnique({
+        where: {
+            user_id
+        }
+    })
+    const tuition = await prisma.tuition.findMany({
         include: {
             schedule: true,
+            appliedTuition: true,
+            address: true,
         }
     });
+
+    const result = tuition.map(tuitionItem => ({
+        ...tuitionItem,
+        isApplied: tuitionItem.appliedTuition.find(item => item.tutor_id === tutor?.tutor_id) ? true : false
+    }));
+
+    console.log(result);
+    
 
     //TODO: add pagination , search and filtering
     return result;
@@ -328,18 +343,18 @@ const getAppliedTutors = async (tuitionId: string) => {
     return result;
 }
 
-const cancelTuitionRequest = async(tuition_request_id: string, student_id: string) => {
-const result = await prisma.tuitionRequest.update({
-    where: {
-        tuition_request_id,
-        student_id
-    },
-    data: {
-        status: 'cancelled'
-    }
-});
+const cancelTuitionRequest = async (tuition_request_id: string, student_id: string) => {
+    const result = await prisma.tuitionRequest.update({
+        where: {
+            tuition_request_id,
+            student_id
+        },
+        data: {
+            status: 'cancelled'
+        }
+    });
 
-return result;
+    return result;
 }
 
 export const tuitionServices = {

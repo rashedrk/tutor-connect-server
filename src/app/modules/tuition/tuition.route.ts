@@ -6,7 +6,7 @@ import { ROLE } from "@prisma/client";
 const router = Router();
 
 router.post('/create', tuitionControllers.createTuition);
-router.get('/', tuitionControllers.getAllTuitions);
+router.get('/', auth(ROLE.tutor), tuitionControllers.getAllTuitions);
 router.post('/apply/:tuitionId', auth(ROLE.tutor), tuitionControllers.applyTuition);
 router.get('/applied', auth(ROLE.tutor), tuitionControllers.getMyAppliedTuition);
 router.get('/posted', auth(ROLE.student), tuitionControllers.getMyPostedTuition);

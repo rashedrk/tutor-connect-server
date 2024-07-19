@@ -15,8 +15,9 @@ const createTuition = catchAsync(async (req, res) => {
     })
 });
 
-const getAllTuitions = catchAsync(async (req, res) => {
-    const result = await tuitionServices.getAllTuitions();
+const getAllTuitions = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
+    const userId = req?.user?.user_id as string;
+    const result = await tuitionServices.getAllTuitions(userId);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
