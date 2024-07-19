@@ -201,6 +201,21 @@ const cancelTuitionRequest = catchAsync(async (req: Request & { user?: TAuthUser
 
 });
 
+const cancelAppliedTuition = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
+    const userId = req?.user?.user_id as string;
+    const appliedTuitionId = req.params.appliedTuitionId;
+
+    const result = await tuitionServices.cancelAppliedTuition(appliedTuitionId, userId)
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Tuition application successfully cancelled",
+        data: result
+    })
+
+});
+
 
 export const tuitionControllers = {
     createTuition,
@@ -216,5 +231,6 @@ export const tuitionControllers = {
     getMyCurrentTuitions,
     selectTutor,
     getAppliedTutors,
-    cancelTuitionRequest
+    cancelTuitionRequest,
+    cancelAppliedTuition
 }

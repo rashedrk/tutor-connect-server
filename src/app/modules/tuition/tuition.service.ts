@@ -57,7 +57,7 @@ const getAllTuitions = async (user_id: string) => {
     }));
 
     console.log(result);
-    
+
 
     //TODO: add pagination , search and filtering
     return result;
@@ -349,6 +349,7 @@ const getAppliedTutors = async (tuitionId: string) => {
     return result;
 }
 
+//for student
 const cancelTuitionRequest = async (tuition_request_id: string, student_id: string) => {
     const result = await prisma.tuitionRequest.update({
         where: {
@@ -362,6 +363,30 @@ const cancelTuitionRequest = async (tuition_request_id: string, student_id: stri
 
     return result;
 }
+
+//for tutor
+const cancelAppliedTuition = async (applied_tuition_id: string, user_id: string) => {
+    const tutor = await prisma.tutor.findUnique({
+        where: {
+            user_id
+        }
+    });
+
+    if (!tutor) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Your are not authenticated")
+    }
+    const result = await prisma.appliedTuition.update({
+        where: {
+            applied_tuition_id,
+            tutor_id: tutor.tutor_id
+        },
+        data: {
+            status: 'cancelled'
+        }
+    });
+
+    return result
+};
 
 export const tuitionServices = {
     createTuition,
@@ -377,5 +402,6 @@ export const tuitionServices = {
     getMyCurrentTuitions,
     selectTutor,
     getAppliedTutors,
-    cancelTuitionRequest
+    cancelTuitionRequest,
+    cancelAppliedTuition
 }

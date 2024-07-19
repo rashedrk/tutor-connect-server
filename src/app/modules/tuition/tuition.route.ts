@@ -19,5 +19,6 @@ router.post('/select/:tutorId', auth(ROLE.student), tuitionControllers.selectTut
 router.get('/:tuitionId', tuitionControllers.getATuitionById);
 router.get('/:tuitionId/applied', tuitionControllers.getAppliedTutors);
 router.put('/cancel/:tuitionRequestId', auth(ROLE.student), tuitionControllers.cancelTuitionRequest);
+router.put('/application/cancel/:appliedTuitionId', auth(ROLE.tutor), tuitionControllers.cancelAppliedTuition);
 
 export const tuitionRoutes = router

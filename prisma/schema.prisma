@@ -73,7 +73,7 @@ model Tutor {
   yearOfExperience String
   fee              String
   details          String
-  rating           Float      @default(3.0)
+  rating           Float    @default(3.0)
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 
@@ -176,6 +176,8 @@ model Tuition {
 }
 
 model AppliedTuition {
+  applied_tuition_id String @id @default(uuid())
+
   tuition_id String
   tuition    Tuition @relation(fields: [tuition_id], references: [tuition_id])
 
@@ -184,7 +186,7 @@ model AppliedTuition {
 
   status REQUEST_STATUS @default(pending)
 
-  @@id([tuition_id, tutor_id])
+  // @@id([tuition_id, tutor_id])
 }
 
 model TuitionRequest {
