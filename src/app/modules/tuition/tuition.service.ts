@@ -124,7 +124,13 @@ const getMyAppliedTuition = async (userId: string) => {
             tutor_id: tutor.tutor_id
         },
         include: {
-            tuition: true
+            tuition: {
+                include: {
+                    address: true,
+                    schedule: true,
+                }
+            },
+
         }
     });
 

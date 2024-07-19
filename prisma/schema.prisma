@@ -182,6 +182,8 @@ model AppliedTuition {
   tutor_id String
   tutor    Tutor  @relation(fields: [tutor_id], references: [tutor_id])
 
+  status REQUEST_STATUS @default(pending)
+
   @@id([tuition_id, tutor_id])
 }
 
