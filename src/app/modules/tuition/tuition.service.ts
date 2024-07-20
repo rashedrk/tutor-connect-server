@@ -233,7 +233,7 @@ const getAllTuitionRequest = async (userId: string) => {
         where: {
             tutor_id: tutor.tutor_id,
             status: {
-                not: 'cancelled'
+                notIn: ["accepted", "cancelled"]
             }
         },
         include: {

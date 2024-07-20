@@ -13,7 +13,7 @@ router.get('/posted', auth(ROLE.student), tuitionControllers.getMyPostedTuition)
 router.get('/requested', auth(ROLE.student), tuitionControllers.getMyTutorRequest);
 router.get('/request', auth(ROLE.tutor), tuitionControllers.getAllTuitionRequest);
 router.post('/request/:tutorId', auth(ROLE.student), tuitionControllers.requestToTutor);
-router.put('/request/:tuitionId', auth(ROLE.tutor), tuitionControllers.changeTuitionRequestStatus);
+router.put('/request/:tuitionRequestId', auth(ROLE.tutor), tuitionControllers.changeTuitionRequestStatus);
 router.get('/current', auth(ROLE.tutor, ROLE.student), tuitionControllers.getMyCurrentTuitions);
 router.post('/select/:appliedTuitionId', auth(ROLE.student), tuitionControllers.selectTutor);
 router.get('/:tuitionId', tuitionControllers.getATuitionById);

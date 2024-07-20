@@ -129,10 +129,10 @@ const getAllTuitionRequest = catchAsync(async (req: Request & { user?: TAuthUser
 
 const changeTuitionRequestStatus = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
     const userId = req?.user?.user_id as string;
-    const tuitionId = req.params.tuitionId;
+    const tuitionRequestId = req.params.tuitionRequestId;
     const status = req.body.status
 
-    const result = await tuitionServices.changeTuitionRequestStatus(status, userId, tuitionId);
+    const result = await tuitionServices.changeTuitionRequestStatus(status, userId, tuitionRequestId);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
