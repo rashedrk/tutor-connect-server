@@ -56,7 +56,7 @@ const getAllTuitions = async (user_id: string) => {
         isApplied: tuitionItem.appliedTuition.find(item => item.tutor_id === tutor?.tutor_id) ? true : false
     }));
 
-    console.log(result);
+    // console.log(result);
 
 
     //TODO: add pagination , search and filtering
@@ -303,19 +303,37 @@ const getMyCurrentTuitions = async (user: TAuthUser) => {
 }
 
 //students can assign/select a tutor for a specific tuition that they have posted
-const selectTutor = async (tuitionId: string, tutorId: string, studentId: string) => {
-    const tuition = await prisma.tuition.update({
-        where: {
-            tuition_id: tuitionId,
-            student_id: studentId
-        },
-        data: {
-            status: "booked",
-            selected_tutor: tutorId
-        }
-    });
+const selectTutor = async (studentId: string, appliedTuitionId: string) => {
 
-    return tuition;
+
+    const result = await prisma.$transaction(async (trxClient) => {
+
+        const tuitionRequest = await trxClient.appliedTuition.update({
+            where: {
+                applied_tuition_id: appliedTuitionId
+            },
+            data: {
+                status: 'accepted'
+            }
+        })
+
+        const tuition = await trxClient.tuition.update({
+            where: {
+                tuition_id: tuitionRequest.tuition_id,
+                student_id: studentId
+            },
+            data: {
+                status: "booked",
+                selected_tutor: tuitionRequest.tutor_id
+            }
+        });
+
+
+        return tuition
+
+    })
+
+    return result;
 }
 
 
@@ -342,7 +360,8 @@ const getAppliedTutors = async (tuitionId: string) => {
                         }
                     }
                 }
-            }
+            },
+            applied_tuition_id: true,
         }
     });
 
