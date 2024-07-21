@@ -297,7 +297,30 @@ const getMyCurrentTuitions = async (user: TAuthUser) => {
                 }
             }
         })
-        return tuitions
+
+        const requestedTuition = await prisma.tuitionRequest.findMany({
+            where: {
+                student_id: user.user_id,
+                status: 'accepted'
+            },
+            include: {
+                schedule: true,
+                tutor: {
+                    select: {
+                        profile: {
+                            select: {
+                                name: true,
+                                email: true,
+                                contactNo: true,
+                                profileImage: true,
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        return [...tuitions, ...requestedTuition]
     }
     else if (role === 'tutor') {
         const tutor = await prisma.tutor.findUnique({
@@ -324,7 +347,26 @@ const getMyCurrentTuitions = async (user: TAuthUser) => {
 
         });
 
-        return tuitions
+        const requestedTuition = await prisma.tuitionRequest.findMany({
+            where: {
+                tutor_id: tutor?.tutor_id,
+                status: 'accepted'
+            },
+            include: {
+                address: true,
+                schedule: true,
+                student: {
+                    select: {
+                        name: true,
+                        email: true,
+                        contactNo: true,
+                        profileImage: true,
+                    }
+                }
+            }
+        })
+
+        return [...tuitions, ...requestedTuition]
     }
 }
 
