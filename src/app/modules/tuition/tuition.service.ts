@@ -1,8 +1,10 @@
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import prisma from "../../utils/prisma";
-import { REQUEST_STATUS } from "@prisma/client";
+import { REQUEST_STATUS, TuitionRequest } from "@prisma/client";
 import { TAuthUser } from "../../types/global";
+import { setAddress } from "../../utils/setAddress";
+import { setSchedule } from "../../utils/setSchedule";
 
 //create a tuition - student
 const createTuition = async (payload: any) => {
@@ -475,6 +477,37 @@ const cancelAppliedTuition = async (applied_tuition_id: string, user_id: string)
     return result
 };
 
+const updateRequestToTutor = async (tuitionRequestId: string, studentId: string, payload: any) => {
+
+    const result = await prisma.$transaction(async (trxClient) => {
+        const address = await setAddress(payload.fullAddress, trxClient);
+
+        const schedule = await setSchedule(payload.schedule, trxClient);
+
+        const request = await trxClient.tuitionRequest.update({
+            where: {
+                tuition_request_id: tuitionRequestId,
+                student_id: studentId,
+                status: 'pending'
+            },
+            data: {
+                address_id: address.address_id,
+                schedule_id: schedule.schedule_id,
+                class: payload?.class,
+                medium: payload?.medium,
+                salary: payload?.salary,
+                subject: payload?.subject,
+                contactNo: payload?.contactNo
+            }
+        })
+
+        return request
+    });
+
+    return result
+
+}
+
 export const tuitionServices = {
     createTuition,
     getAllTuitions,
@@ -490,5 +523,6 @@ export const tuitionServices = {
     selectTutor,
     getAppliedTutors,
     cancelTuitionRequest,
-    cancelAppliedTuition
+    cancelAppliedTuition,
+    updateRequestToTutor
 }

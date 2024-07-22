@@ -12,6 +12,7 @@ router.get('/applied', auth(ROLE.tutor), tuitionControllers.getMyAppliedTuition)
 router.get('/posted', auth(ROLE.student), tuitionControllers.getMyPostedTuition);
 router.get('/requested', auth(ROLE.student), tuitionControllers.getMyTutorRequest);
 router.get('/request', auth(ROLE.tutor), tuitionControllers.getAllTuitionRequest);
+router.put('/request/update/:tuitionRequestId', auth(ROLE.student), tuitionControllers.updateRequestToTutor);
 router.post('/request/:tutorId', auth(ROLE.student), tuitionControllers.requestToTutor);
 router.put('/request/:tuitionRequestId', auth(ROLE.tutor), tuitionControllers.changeTuitionRequestStatus);
 router.get('/current', auth(ROLE.tutor, ROLE.student), tuitionControllers.getMyCurrentTuitions);
@@ -20,5 +21,7 @@ router.get('/:tuitionId', tuitionControllers.getATuitionById);
 router.get('/:tuitionId/applied', tuitionControllers.getAppliedTutors);
 router.put('/cancel/:tuitionRequestId', auth(ROLE.student), tuitionControllers.cancelTuitionRequest);
 router.put('/application/cancel/:appliedTuitionId', auth(ROLE.tutor), tuitionControllers.cancelAppliedTuition);
+
+
 
 export const tuitionRoutes = router
