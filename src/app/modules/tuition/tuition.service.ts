@@ -156,6 +156,8 @@ const getMyPostedTuition = async (userId: string) => {
                     }
                 }
             },
+            address: true,
+            schedule: true,
             selectedTutor: true
         }
     });
@@ -507,6 +509,37 @@ const updateRequestToTutor = async (tuitionRequestId: string, studentId: string,
     return result
 
 }
+const updatePostedTuition = async (tuitionId: string, studentId: string, payload: any) => {
+
+    const result = await prisma.$transaction(async (trxClient) => {
+        const address = await setAddress(payload.fullAddress, trxClient);
+
+        const schedule = await setSchedule(payload.schedule, trxClient);
+
+        const tuition = await trxClient.tuition.update({
+            where: {
+                tuition_id: tuitionId,
+                student_id: studentId,
+                status: 'available'
+            },
+            data: {
+                address_id: address.address_id,
+                schedule_id: schedule.schedule_id,
+                class: payload?.class,
+                medium: payload?.medium,
+                salary: payload?.salary,
+                subject: payload?.subject,
+                contactNo: payload?.contactNo,
+                gender: payload?.gender,
+            }
+        })
+
+        return tuition
+    });
+
+    return result
+
+}
 
 export const tuitionServices = {
     createTuition,
@@ -524,5 +557,6 @@ export const tuitionServices = {
     getAppliedTutors,
     cancelTuitionRequest,
     cancelAppliedTuition,
-    updateRequestToTutor
+    updateRequestToTutor,
+    updatePostedTuition
 }
