@@ -131,7 +131,8 @@ const getAllTutors = async (filters: TTutorFilterRequest, options: TPaginationOp
                 select: {
                     qualification: true
                 }
-            }
+            },
+            rating: true
         },
     });
 
