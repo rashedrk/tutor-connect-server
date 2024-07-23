@@ -46,6 +46,9 @@ const getAllTuitions = async (user_id: string) => {
         }
     })
     const tuition = await prisma.tuition.findMany({
+        where: {
+            isDeleted: false
+        },
         include: {
             schedule: true,
             appliedTuition: true,
@@ -70,7 +73,8 @@ const getAllTuitions = async (user_id: string) => {
 const getATuitionById = async (tuitionId: string) => {
     const result = await prisma.tuition.findUnique({
         where: {
-            tuition_id: tuitionId
+            tuition_id: tuitionId,
+            isDeleted: false,
         },
     });
 
@@ -123,7 +127,7 @@ const getMyAppliedTuition = async (userId: string) => {
 
     const result = await prisma.appliedTuition.findMany({
         where: {
-            tutor_id: tutor.tutor_id
+            tutor_id: tutor.tutor_id,
         },
         include: {
             tuition: {
@@ -143,7 +147,8 @@ const getMyAppliedTuition = async (userId: string) => {
 const getMyPostedTuition = async (userId: string) => {
     const result = await prisma.tuition.findMany({
         where: {
-            student_id: userId
+            student_id: userId,
+            isDeleted: false,
         },
         include: {
             appliedTuition: {
@@ -541,6 +546,18 @@ const updatePostedTuition = async (tuitionId: string, studentId: string, payload
 
 }
 
+const deletePostedTuition = async(studentId: string, tuitionId: string) => {
+    const result = await prisma.tuition.update({
+        where: {
+            student_id: studentId,
+            tuition_id: tuitionId
+        },
+        data: {
+            isDeleted: true,
+        }
+    })
+}
+
 export const tuitionServices = {
     createTuition,
     getAllTuitions,
@@ -558,5 +575,6 @@ export const tuitionServices = {
     cancelTuitionRequest,
     cancelAppliedTuition,
     updateRequestToTutor,
-    updatePostedTuition
+    updatePostedTuition,
+    deletePostedTuition
 }

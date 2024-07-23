@@ -244,6 +244,21 @@ const updatePostedTuition = catchAsync(async (req: Request & { user?: TAuthUser 
 
 });
 
+const deletePostedTuition = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
+    const studentId = req?.user?.user_id as string;
+    const tuitionId = req.params.tuitionId;
+
+    const result = await tuitionServices.deletePostedTuition(tuitionId, studentId)
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Tuition deleted successfully",
+        data: result
+    })
+
+});
+
 
 export const tuitionControllers = {
     createTuition,
@@ -262,5 +277,6 @@ export const tuitionControllers = {
     cancelTuitionRequest,
     cancelAppliedTuition,
     updateRequestToTutor,
-    updatePostedTuition
+    updatePostedTuition,
+    deletePostedTuition
 }

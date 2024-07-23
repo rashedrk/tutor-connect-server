@@ -170,6 +170,7 @@ model Tuition {
   schedule_id String   @unique
   schedule    Schedule @relation(fields: [schedule_id], references: [schedule_id])
 
+  isDeleted      Boolean          @default(false)
   created_at     DateTime         @default(now())
   updated_at     DateTime         @updatedAt
   appliedTuition AppliedTuition[]
