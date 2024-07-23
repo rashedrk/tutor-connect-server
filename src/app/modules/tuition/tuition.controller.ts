@@ -248,7 +248,7 @@ const deletePostedTuition = catchAsync(async (req: Request & { user?: TAuthUser 
     const studentId = req?.user?.user_id as string;
     const tuitionId = req.params.tuitionId;
 
-    const result = await tuitionServices.deletePostedTuition(tuitionId, studentId)
+    const result = await tuitionServices.deletePostedTuition(studentId, tuitionId)
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
