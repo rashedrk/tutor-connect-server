@@ -67,7 +67,7 @@ model Tutor {
   user_id String  @unique
   profile Profile @relation(fields: [user_id], references: [user_id])
 
-  medium           MEDIUM[]
+  medium           String[]
   class            Int[]
   experties        String[]
   yearOfExperience String

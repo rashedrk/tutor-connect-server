@@ -25,6 +25,8 @@ export type TTutor = {
     permanentAddress: FullAddress;
     profileImage: string;
     expertise: string[];
+    medium: string[];
+    class: number[];
     yearOfExperience: string;
     fee: string;
     details: string;

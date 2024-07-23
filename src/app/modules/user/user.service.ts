@@ -3,6 +3,7 @@ import prisma from "../../utils/prisma"
 import bcrypt from "bcrypt"
 import config from "../../config/config";
 import { TTutor, TUser } from "./user.interface";
+import { setAddress } from "../../utils/setAddress";
 
 
 const createStudent = async (payload: TUser) => {
@@ -18,36 +19,10 @@ const createStudent = async (payload: TUser) => {
         })
 
 
-        let presentAddress, permanentAddress;
-        const isPresentAddressAvailable = await prisma.fullAddress.findFirst({
-            where: {
-                ...payload.presentAddress
-            }
-        });
+        
+        const presentAddress = await setAddress(payload.presentAddress, trxClient);
 
-        if (isPresentAddressAvailable) {
-            presentAddress = isPresentAddressAvailable
-        }
-        else {
-            presentAddress = await trxClient.fullAddress.create({
-                data: payload.presentAddress
-            });
-        }
-
-        const isPermanentAddressAvailable = await prisma.fullAddress.findFirst({
-            where: {
-                ...payload.presentAddress
-            }
-        });
-
-        if (isPermanentAddressAvailable) {
-            permanentAddress = isPermanentAddressAvailable
-        }
-        else {
-            permanentAddress = await trxClient.fullAddress.create({
-                data: payload.permanentAddress
-            });
-        }
+        const permanentAddress = await setAddress(payload.presentAddress, trxClient);
 
         await trxClient.profile.create({
             data: {
@@ -100,37 +75,8 @@ const createTutor = async (payload: TTutor) => {
             }
         })
 
-        let presentAddress, permanentAddress;
-
-        const isPresentAddressAvailable = await prisma.fullAddress.findFirst({
-            where: {
-                ...payload.presentAddress
-            }
-        });
-
-        if (isPresentAddressAvailable) {
-            presentAddress = isPresentAddressAvailable
-        }
-        else {
-            presentAddress = await trxClient.fullAddress.create({
-                data: payload.presentAddress
-            });
-        }
-
-        const isPermanentAddressAvailable = await prisma.fullAddress.findFirst({
-            where: {
-                ...payload.presentAddress
-            }
-        });
-
-        if (isPermanentAddressAvailable) {
-            permanentAddress = isPermanentAddressAvailable
-        }
-        else {
-            permanentAddress = await trxClient.fullAddress.create({
-                data: payload.permanentAddress
-            });
-        }
+        const presentAddress = await setAddress(payload.presentAddress, trxClient);
+        const permanentAddress = await setAddress(payload.presentAddress, trxClient);
 
         const newProfile = await trxClient.profile.create({
             data: {
@@ -153,6 +99,8 @@ const createTutor = async (payload: TTutor) => {
                 yearOfExperience: payload.yearOfExperience,
                 fee: payload.fee,
                 details: payload.details,
+                class: payload.class,
+                medium: payload.medium,
             }
         });
 
