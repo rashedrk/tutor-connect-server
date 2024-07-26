@@ -265,11 +265,17 @@ const requestToTutor = async (payload: any, tutorId: string, studentId: string) 
 };
 
 //student can see all the tuition request that they have made to tutors
-const getMyTutorRequest = async (studentId: string) => {
+const getMyTutorRequest = async (studentId: string, options: TPaginationOptions) => {
+    const { page, limit, skip } = calculatePagination(options);
     const result = await prisma.tuitionRequest.findMany({
         where: {
             student_id: studentId
         },
+        skip,
+        take: limit,
+        orderBy: options.sortBy && options.sortOrder
+            ? { [options.sortBy]: options.sortOrder }
+            : { created_at: 'desc' },
         include: {
             address: true,
             schedule: true,
@@ -287,7 +293,20 @@ const getMyTutorRequest = async (studentId: string) => {
         }
     });
 
-    return result
+    const total = await prisma.tuitionRequest.count({
+        where: {
+            student_id: studentId,
+        },
+    });
+
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+        },
+        data: result,
+    };
 };
 
 

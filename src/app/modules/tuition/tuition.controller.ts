@@ -106,8 +106,9 @@ const requestToTutor = catchAsync(async (req: Request & { user?: TAuthUser }, re
 
 const getMyTutorRequest = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
     const studentId = req?.user?.user_id as string;
+    const options = pick(req.query, paginationOptions);
 
-    const result = await tuitionServices.getMyTutorRequest(studentId);
+    const result = await tuitionServices.getMyTutorRequest(studentId, options);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
