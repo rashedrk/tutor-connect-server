@@ -272,7 +272,8 @@ const getMyTutorRequest = async (studentId: string) => {
 
 
 //tutors can see all the requested tuitions from the students
-const getAllTuitionRequest = async (userId: string) => {
+const getAllTuitionRequest = async (userId: string, options: TPaginationOptions) => {
+    const { page, limit, skip } = calculatePagination(options);
     const tutor = await prisma.tutor.findUniqueOrThrow({
         where: {
             user_id: userId,
@@ -288,6 +289,11 @@ const getAllTuitionRequest = async (userId: string) => {
                 not: 'cancelled'
             }
         },
+        skip,
+        take: limit,
+        orderBy: options.sortBy && options.sortOrder
+            ? { [options.sortBy]: options.sortOrder }
+            : { created_at: 'desc' },
         include: {
             student: true,
             address: true,
@@ -295,7 +301,23 @@ const getAllTuitionRequest = async (userId: string) => {
         }
     });
 
-    return result
+    const total = await prisma.tuitionRequest.count({
+        where: {
+            tutor_id: tutor.tutor_id,
+            status: {
+                not: 'cancelled'
+            }
+        },
+    });
+
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+        },
+        data: result,
+    };
 };
 
 //tutors can change the status of the tuition request
