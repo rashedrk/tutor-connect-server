@@ -135,8 +135,11 @@ const applyTuition = async (userId: string, tuitionId: string) => {
 };
 
 //tutor can see all the tuitions that he/she applied
-const getMyAppliedTuition = async (userId: string) => {
-    //TODO: add pagination , search and filtering
+const getMyAppliedTuition = async (userId: string, options: TPaginationOptions) => {
+    //TODO:  search and filtering
+    
+    const { page, limit, skip } = calculatePagination(options);
+
     const tutor = await prisma.tutor.findUnique({
         where: {
             user_id: userId
@@ -151,6 +154,11 @@ const getMyAppliedTuition = async (userId: string) => {
         where: {
             tutor_id: tutor.tutor_id,
         },
+        skip,
+        take: limit,
+        orderBy: options.sortBy && options.sortOrder
+            ? { [options.sortBy]: options.sortOrder }
+            : { created_at: 'desc' },
         include: {
             tuition: {
                 include: {
@@ -162,7 +170,20 @@ const getMyAppliedTuition = async (userId: string) => {
         }
     });
 
-    return result;
+    const total = await prisma.appliedTuition.count({
+        where: {
+            tutor_id: tutor.tutor_id,
+        },
+    });
+
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+        },
+        data: result,
+    };
 }
 
 //students can see all the tuitions that they have posted
