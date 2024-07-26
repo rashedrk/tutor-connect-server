@@ -4,10 +4,11 @@ import sendResponse from "../../utils/sendResponse";
 import { tutorServices } from "./tutor.services";
 import pick from "../../utils/pick";
 import { tutorFilterableFields } from "./tutor.constant";
+import { paginationOptions } from "../../constant";
 
 const getAllTutors = catchAsync(async (req, res) => {
     const filters = pick(req.query, tutorFilterableFields);
-    const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+    const options = pick(req.query, paginationOptions);
 
     const result = await tutorServices.getAllTutors(filters, options);
 

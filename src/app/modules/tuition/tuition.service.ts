@@ -2,9 +2,10 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import prisma from "../../utils/prisma";
 import { REQUEST_STATUS, TuitionRequest } from "@prisma/client";
-import { TAuthUser } from "../../types/global";
+import { TAuthUser, TPaginationOptions } from "../../types/global";
 import { setAddress } from "../../utils/setAddress";
 import { setSchedule } from "../../utils/setSchedule";
+import { calculatePagination } from "../../utils/calculatePagination";
 
 //create a tuition - student
 const createTuition = async (payload: any) => {
@@ -39,7 +40,10 @@ const createTuition = async (payload: any) => {
 };
 
 //retrieve all the available tuitions - tutor, students, tutors
-const getAllTuitions = async (user_id: string) => {
+const getAllTuitions = async (user_id: string, options: TPaginationOptions) => {
+
+    const { page, limit, skip } = calculatePagination(options);
+
     const tutor = await prisma.tutor.findUnique({
         where: {
             user_id
@@ -47,8 +51,13 @@ const getAllTuitions = async (user_id: string) => {
     })
     const tuition = await prisma.tuition.findMany({
         where: {
-            isDeleted: false
+            isDeleted: false,
         },
+        skip,
+        take: limit,
+        orderBy: options.sortBy && options.sortOrder
+            ? { [options.sortBy]: options.sortOrder }
+            : { created_at: 'desc' },
         include: {
             schedule: true,
             appliedTuition: true,
@@ -63,9 +72,22 @@ const getAllTuitions = async (user_id: string) => {
 
     // console.log(result);
 
+    const total = await prisma.tuition.count({
+        where: {
+            isDeleted: false,
+        },
+    });
 
-    //TODO: add pagination , search and filtering
-    return result;
+
+    //TODO: search and filtering
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+        },
+        data: result,
+    };
 };
 
 
@@ -546,7 +568,7 @@ const updatePostedTuition = async (tuitionId: string, studentId: string, payload
 
 }
 
-const deletePostedTuition = async(studentId: string, tuitionId: string) => {
+const deletePostedTuition = async (studentId: string, tuitionId: string) => {
     const result = await prisma.tuition.update({
         where: {
             student_id: studentId,

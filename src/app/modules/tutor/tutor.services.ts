@@ -113,6 +113,9 @@ const getAllTutors = async (filters: TTutorFilterRequest, options: TPaginationOp
         where: whereConditions,
         skip,
         take: limit,
+        orderBy: options.sortBy && options.sortOrder
+            ? { [options.sortBy]: options.sortOrder }
+            : { rating: 'desc' },
         select: {
             tutor_id: true,
             user_id: true,

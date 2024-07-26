@@ -4,6 +4,8 @@ import sendResponse from "../../utils/sendResponse";
 import { tuitionServices } from "./tuition.service";
 import { Request } from "express";
 import { TAuthUser } from "../../types/global";
+import pick from "../../utils/pick";
+import { paginationOptions } from "../../constant";
 
 const createTuition = catchAsync(async (req, res) => {
     const result = await tuitionServices.createTuition(req.body);
@@ -17,7 +19,8 @@ const createTuition = catchAsync(async (req, res) => {
 
 const getAllTuitions = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
     const userId = req?.user?.user_id as string;
-    const result = await tuitionServices.getAllTuitions(userId);
+    const options = pick(req.query, paginationOptions);
+    const result = await tuitionServices.getAllTuitions(userId, options);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
