@@ -499,11 +499,17 @@ const selectTutor = async (studentId: string, appliedTuitionId: string) => {
 }
 
 
-const getAppliedTutors = async (tuitionId: string) => {
+const getAppliedTutors = async (tuitionId: string, options: TPaginationOptions) => {
+    const { page, limit, skip } = calculatePagination(options);
     const result = await prisma.appliedTuition.findMany({
         where: {
             tuition_id: tuitionId
         },
+        skip,
+        take: limit,
+        orderBy: options.sortBy && options.sortOrder
+            ? { [options.sortBy]: options.sortOrder }
+            : { created_at: 'desc' },
         select: {
             tuition_id: true,
             tutor: {
@@ -527,7 +533,20 @@ const getAppliedTutors = async (tuitionId: string) => {
         }
     });
 
-    return result;
+    const total = await prisma.appliedTuition.count({
+        where: {
+            tuition_id: tuitionId,
+        },
+    });
+
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+        },
+        data: result,
+    };
 }
 
 //for student

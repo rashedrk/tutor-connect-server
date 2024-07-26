@@ -180,8 +180,9 @@ const selectTutor = catchAsync(async (req: Request & { user?: TAuthUser }, res) 
 
 const getAppliedTutors = catchAsync(async (req, res) => {
     const tuitionId = req.params.tuitionId;
+    const options = pick(req.query, paginationOptions);
 
-    const result = await tuitionServices.getAppliedTutors(tuitionId);
+    const result = await tuitionServices.getAppliedTutors(tuitionId,options);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
