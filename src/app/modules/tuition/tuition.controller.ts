@@ -26,7 +26,8 @@ const getAllTuitions = catchAsync(async (req: Request & { user?: TAuthUser }, re
         statusCode: httpStatus.OK,
         success: true,
         message: "All Tuitions retrieved successfully",
-        data: result
+        meta: result.meta,
+        data: result.data,
     })
 });
 
@@ -69,7 +70,8 @@ const getMyAppliedTuition = catchAsync(async (req: Request & { user?: TAuthUser 
         statusCode: httpStatus.OK,
         success: true,
         message: "All applied tuitions retrieved successfully",
-        data: result
+        meta: result.meta,
+        data: result.data,
     })
 });
 
@@ -84,7 +86,8 @@ const getMyPostedTuition = catchAsync(async (req: Request & { user?: TAuthUser }
         statusCode: httpStatus.OK,
         success: true,
         message: "All posted tuitions retrieved successfully",
-        data: result
+        meta: result.meta,
+        data: result.data,
     })
 });
 
@@ -114,7 +117,8 @@ const getMyTutorRequest = catchAsync(async (req: Request & { user?: TAuthUser },
         statusCode: httpStatus.OK,
         success: true,
         message: "All requested tutors retrieved successfully",
-        data: result
+        meta: result.meta,
+        data: result.data,
     })
 
 });
@@ -129,7 +133,9 @@ const getAllTuitionRequest = catchAsync(async (req: Request & { user?: TAuthUser
         statusCode: httpStatus.OK,
         success: true,
         message: "All tuition requests retrieved successfully",
-        data: result
+        meta: result.meta,
+        data: result.data,
+        
     })
 
 });
@@ -189,7 +195,8 @@ const getAppliedTutors = catchAsync(async (req, res) => {
         statusCode: httpStatus.OK,
         success: true,
         message: "Applied Tutors retrieved successfully",
-        data: result
+        meta: result.meta,
+        data: result.data,
     })
 });
 
