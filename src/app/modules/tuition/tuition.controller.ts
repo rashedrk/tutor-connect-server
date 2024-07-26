@@ -76,8 +76,9 @@ const getMyAppliedTuition = catchAsync(async (req: Request & { user?: TAuthUser 
 //for student
 const getMyPostedTuition = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
     const userId = req?.user?.user_id as string;
+    const options = pick(req.query, paginationOptions);
 
-    const result = await tuitionServices.getMyPostedTuition(userId);
+    const result = await tuitionServices.getMyPostedTuition(userId, options);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
