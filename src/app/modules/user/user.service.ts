@@ -4,6 +4,7 @@ import bcrypt from "bcrypt"
 import config from "../../config/config";
 import { TTutor, TUser } from "./user.interface";
 import { setAddress } from "../../utils/setAddress";
+import { TAuthUser } from "../../types/global";
 
 
 const createStudent = async (payload: TUser) => {
@@ -19,7 +20,7 @@ const createStudent = async (payload: TUser) => {
         })
 
 
-        
+
         const presentAddress = await setAddress(payload.presentAddress, trxClient);
 
         const permanentAddress = await setAddress(payload.presentAddress, trxClient);
@@ -149,27 +150,71 @@ const createTutor = async (payload: TTutor) => {
     return result
 };
 
-const getMyProfile = async (userId: string) => {
-    const user = await prisma.user.findUniqueOrThrow({
-        where: {
-            user_id: userId
-        },
-        select: {
-            user_id: true,
-            email: true,
-            role: true,
-            created_at: true,
-            updated_at: true,
-            profile: {
-                include: {
-                    presentAddress: true,
-                    permanentAddress: true,
+const getMyProfile = async (user: TAuthUser) => {
+    const role = user.role;
+    if (role === ROLE.student) {
+        const userInfo = await prisma.user.findUniqueOrThrow({
+            where: {
+                user_id: user.user_id
+            },
+            select: {
+                user_id: true,
+                email: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+                profile: {
+                    include: {
+                        presentAddress: true,
+                        permanentAddress: true,
+                    },
+
                 }
             }
-        }
-    });
+        });
 
-    return user
+        return userInfo
+    } else {
+        const userInfo = await prisma.user.findUniqueOrThrow({
+            where: {
+                user_id: user.user_id
+            },
+            select: {
+                user_id: true,
+                email: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+                profile: {
+                    include: {
+                        presentAddress: true,
+                        permanentAddress: true,
+                    },
+
+                },
+
+
+            }
+        });
+
+        const tutorInfo = await prisma.tutor.findUniqueOrThrow({
+            where: {
+                user_id: user.user_id
+            },
+            include: {
+                tutorQualification: {
+                    include: {
+                        qualification: true,
+                    }
+                },
+            }
+
+        })
+
+        return {...userInfo, ...tutorInfo}
+    }
+
+
 }
 
 

@@ -29,8 +29,8 @@ const createStudent = catchAsync(async (req, res) => {
 
 const getMyProfile = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
 
-    const id = req?.user?.user_id as string
-    const result = await userServices.getMyProfile(id);
+
+    const result = await userServices.getMyProfile(req?.user as TAuthUser);
 
     sendResponse(res, {
         success: true,
