@@ -19,6 +19,20 @@ const updateDetails = catchAsync(async (req: Request & { user?: TAuthUser }, res
     })
 });
 
+const updatePersonalInfo = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
+    const userId = req?.user?.user_id as string;
+
+    const result = await profileServices.updatePersonalInfo(userId, req.body);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Personal Information updated successfully",
+        data: result
+    })
+});
+
 export const profileControllers = {
-    updateDetails
+    updateDetails,
+    updatePersonalInfo
 }

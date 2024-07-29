@@ -6,5 +6,6 @@ import { profileControllers } from "./profile.controller";
 const router = Router();
 
 router.put('/details', auth(ROLE.student, ROLE.tutor), profileControllers.updateDetails);
+router.put('/personalInfo', auth(ROLE.student, ROLE.tutor), profileControllers.updatePersonalInfo);
 
 export const profileRoutes = router;
