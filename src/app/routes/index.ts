@@ -4,6 +4,7 @@ import { authRoutes } from "../modules/auth/auth.route";
 import { tutorRoutes } from "../modules/tutor/tutor.route";
 import { tuitionRoutes } from "../modules/tuition/tuition.route";
 import { scheduleRoutes } from "../modules/schedule/schedule.route";
+import { profileRoutes } from "../modules/profile/profile.route";
 
 const router = Router();
 
@@ -28,6 +29,10 @@ const moduleRoutes = [
     {
         path: '/schedule',
         route: scheduleRoutes
+    },
+    {
+        path: '/profile',
+        route: profileRoutes
     },
 ];
 
