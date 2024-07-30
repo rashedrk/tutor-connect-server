@@ -12,3 +12,11 @@ export type TAddress = {
     presentAddress?: FullAddress,
     permanentAddress?: FullAddress
 }
+
+export type TOthersInfo = {
+    experties: string[],
+    yearOfExperience: string,
+    medium: string[],
+    class: number[],
+    fee: string,
+}

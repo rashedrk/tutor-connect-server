@@ -53,7 +53,20 @@ const updateAcademicInfo = catchAsync(async (req, res) => {
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Address updated successfully",
+        message: "Academic info updated successfully",
+        data: result
+    })
+});
+
+const updateOthersInfo = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
+    const userId = req?.user?.user_id as string;
+
+    const result = await profileServices.updateOthersInfo(userId, req.body);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Others info updated successfully",
         data: result
     })
 });
@@ -62,5 +75,6 @@ export const profileControllers = {
     updateDetails,
     updatePersonalInfo,
     updateAddress,
-    updateAcademicInfo
+    updateAcademicInfo,
+    updateOthersInfo
 }

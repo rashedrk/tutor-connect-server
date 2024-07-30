@@ -9,5 +9,6 @@ router.put('/details', auth(ROLE.student, ROLE.tutor), profileControllers.update
 router.put('/personalInfo', auth(ROLE.student, ROLE.tutor), profileControllers.updatePersonalInfo);
 router.put('/address', auth(ROLE.student, ROLE.tutor), profileControllers.updateAddress);
 router.put('/academicInfo', auth(ROLE.tutor), profileControllers.updateAcademicInfo);
+router.put('/othersInfo', auth(ROLE.tutor), profileControllers.updateOthersInfo);
 
 export const profileRoutes = router;

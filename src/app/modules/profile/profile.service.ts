@@ -1,7 +1,7 @@
 import { Qualification } from "@prisma/client";
 import prisma from "../../utils/prisma"
 import { setAddress } from "../../utils/setAddress";
-import { TAddress, TPersonalInfo } from "./profile.interface";
+import { TAddress,  TOthersInfo, TPersonalInfo } from "./profile.interface";
 
 const updateDetails = async (userId: string, details: string) => {
 
@@ -99,11 +99,29 @@ const updateAcademicInfo = async (academicInfo: Qualification[]) => {
     });
 
     return result;
+};
+
+const updateOthersInfo = async (userId: string, otherInfo: TOthersInfo) => {
+    const { experties, fee, medium, yearOfExperience } = otherInfo;
+    const result = await prisma.tutor.update({
+        where: {
+            user_id: userId
+        },
+        data: {
+            experties,
+            fee,
+            medium,
+            yearOfExperience,
+            class: otherInfo.class
+        }
+    })
+    return result;
 }
 
 export const profileServices = {
     updateDetails,
     updatePersonalInfo,
     updateAddress,
-    updateAcademicInfo
+    updateAcademicInfo,
+    updateOthersInfo
 }
