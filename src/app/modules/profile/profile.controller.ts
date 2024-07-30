@@ -5,6 +5,19 @@ import { profileServices } from "./profile.service";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 
+const getMyProfile = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
+
+
+    const result = await profileServices.getMyProfile(req?.user as TAuthUser);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: 'User profile retrieved successfully!',
+        data: result
+    })
+});
+
 const updateDetails = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
     const userId = req?.user?.user_id as string;
     const details = req.body.details;
@@ -72,6 +85,7 @@ const updateOthersInfo = catchAsync(async (req: Request & { user?: TAuthUser }, 
 });
 
 export const profileControllers = {
+    getMyProfile,
     updateDetails,
     updatePersonalInfo,
     updateAddress,

@@ -1,7 +1,76 @@
-import { Qualification } from "@prisma/client";
+import { Qualification, ROLE } from "@prisma/client";
 import prisma from "../../utils/prisma"
 import { setAddress } from "../../utils/setAddress";
 import { TAddress,  TOthersInfo, TPersonalInfo } from "./profile.interface";
+import { TAuthUser } from "../../types/global";
+
+const getMyProfile = async (user: TAuthUser) => {
+    const role = user.role;
+    if (role === ROLE.student) {
+        const userInfo = await prisma.user.findUniqueOrThrow({
+            where: {
+                user_id: user.user_id
+            },
+            select: {
+                user_id: true,
+                email: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+                profile: {
+                    include: {
+                        presentAddress: true,
+                        permanentAddress: true,
+                    },
+
+                }
+            }
+        });
+
+        return userInfo
+    } else {
+        const userInfo = await prisma.user.findUniqueOrThrow({
+            where: {
+                user_id: user.user_id
+            },
+            select: {
+                user_id: true,
+                email: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+                profile: {
+                    include: {
+                        presentAddress: true,
+                        permanentAddress: true,
+                    },
+
+                },
+
+
+            }
+        });
+
+        const tutorInfo = await prisma.tutor.findUniqueOrThrow({
+            where: {
+                user_id: user.user_id
+            },
+            include: {
+                tutorQualification: {
+                    include: {
+                        qualification: true,
+                    }
+                },
+            }
+
+        })
+
+        return {...userInfo, ...tutorInfo}
+    }
+
+
+}
+
 
 const updateDetails = async (userId: string, details: string) => {
 
@@ -119,6 +188,7 @@ const updateOthersInfo = async (userId: string, otherInfo: TOthersInfo) => {
 }
 
 export const profileServices = {
+    getMyProfile,
     updateDetails,
     updatePersonalInfo,
     updateAddress,

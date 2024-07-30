@@ -27,21 +27,9 @@ const createStudent = catchAsync(async (req, res) => {
     })
 });
 
-const getMyProfile = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
 
-
-    const result = await userServices.getMyProfile(req?.user as TAuthUser);
-
-    sendResponse(res, {
-        success: true,
-        statusCode: httpStatus.OK,
-        message: 'User profile retrieved successfully!',
-        data: result
-    })
-});
 
 export const userController = {
     createStudent,
     createTutor,
-    getMyProfile
 }

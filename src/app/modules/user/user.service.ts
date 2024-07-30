@@ -150,77 +150,10 @@ const createTutor = async (payload: TTutor) => {
     return result
 };
 
-const getMyProfile = async (user: TAuthUser) => {
-    const role = user.role;
-    if (role === ROLE.student) {
-        const userInfo = await prisma.user.findUniqueOrThrow({
-            where: {
-                user_id: user.user_id
-            },
-            select: {
-                user_id: true,
-                email: true,
-                role: true,
-                created_at: true,
-                updated_at: true,
-                profile: {
-                    include: {
-                        presentAddress: true,
-                        permanentAddress: true,
-                    },
-
-                }
-            }
-        });
-
-        return userInfo
-    } else {
-        const userInfo = await prisma.user.findUniqueOrThrow({
-            where: {
-                user_id: user.user_id
-            },
-            select: {
-                user_id: true,
-                email: true,
-                role: true,
-                created_at: true,
-                updated_at: true,
-                profile: {
-                    include: {
-                        presentAddress: true,
-                        permanentAddress: true,
-                    },
-
-                },
-
-
-            }
-        });
-
-        const tutorInfo = await prisma.tutor.findUniqueOrThrow({
-            where: {
-                user_id: user.user_id
-            },
-            include: {
-                tutorQualification: {
-                    include: {
-                        qualification: true,
-                    }
-                },
-            }
-
-        })
-
-        return {...userInfo, ...tutorInfo}
-    }
-
-
-}
 
 
 
 export const userServices = {
     createStudent,
     createTutor,
-    getMyProfile
 }
