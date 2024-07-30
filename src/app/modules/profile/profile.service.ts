@@ -1,3 +1,4 @@
+import { Qualification } from "@prisma/client";
 import prisma from "../../utils/prisma"
 import { setAddress } from "../../utils/setAddress";
 import { TAddress, TPersonalInfo } from "./profile.interface";
@@ -85,8 +86,24 @@ const updateAddress = async (userId: string, address: TAddress) => {
     return result;
 };
 
+const updateAcademicInfo = async (academicInfo: Qualification[]) => {
+    const result = await prisma.$transaction(async (trxClient) => {
+        for (const qualification of academicInfo) {
+            const { qualification_id, degree, institution, year } = qualification;
+
+            await trxClient.qualification.update({
+                where: { qualification_id },
+                data: { degree, institution, year }
+            });
+        }
+    });
+
+    return result;
+}
+
 export const profileServices = {
     updateDetails,
     updatePersonalInfo,
-    updateAddress
+    updateAddress,
+    updateAcademicInfo
 }

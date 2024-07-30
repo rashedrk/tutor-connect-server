@@ -45,8 +45,22 @@ const updateAddress = catchAsync(async (req: Request & { user?: TAuthUser }, res
     })
 });
 
+const updateAcademicInfo = catchAsync(async (req, res) => {
+    const tutorQualification = req.body.tutorQualification
+
+    const result = await profileServices.updateAcademicInfo(tutorQualification);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Address updated successfully",
+        data: result
+    })
+});
+
 export const profileControllers = {
     updateDetails,
     updatePersonalInfo,
-    updateAddress
+    updateAddress,
+    updateAcademicInfo
 }
