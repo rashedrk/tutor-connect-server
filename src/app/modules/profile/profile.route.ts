@@ -7,5 +7,6 @@ const router = Router();
 
 router.put('/details', auth(ROLE.student, ROLE.tutor), profileControllers.updateDetails);
 router.put('/personalInfo', auth(ROLE.student, ROLE.tutor), profileControllers.updatePersonalInfo);
+router.put('/address', auth(ROLE.student, ROLE.tutor), profileControllers.updateAddress);
 
 export const profileRoutes = router;

@@ -32,7 +32,21 @@ const updatePersonalInfo = catchAsync(async (req: Request & { user?: TAuthUser }
     })
 });
 
+const updateAddress = catchAsync(async (req: Request & { user?: TAuthUser }, res) => {
+    const userId = req?.user?.user_id as string;
+
+    const result = await profileServices.updateAddress(userId, req.body);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Address updated successfully",
+        data: result
+    })
+});
+
 export const profileControllers = {
     updateDetails,
-    updatePersonalInfo
+    updatePersonalInfo,
+    updateAddress
 }
