@@ -585,6 +585,8 @@ const cancelTuitionRequest = async (tuition_request_id: string, student_id: stri
 
 //for tutor
 const cancelAppliedTuition = async (applied_tuition_id: string, user_id: string) => {
+    console.log(applied_tuition_id, user_id);
+    
     const tutor = await prisma.tutor.findUnique({
         where: {
             user_id

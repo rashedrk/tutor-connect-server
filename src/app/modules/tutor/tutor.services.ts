@@ -127,6 +127,7 @@ const getAllTutors = async (filters: TTutorFilterRequest, options: TPaginationOp
                     name: true,
                     email: true,
                     profileImage: true,
+                    presentAddress: true,
                 }
             },
             review: true,
