@@ -172,9 +172,9 @@ const getDashboardOverview = async (user: TAuthUser) => {
                 activeTuitions,
                 pendingRequests,
                 totalHours,
-                tuitionByDay,
-                upcomingTuition: nextThree
-            }
+            },
+            tuitionByDay,
+            upcomingTuition: nextThree
         }
     }
 
